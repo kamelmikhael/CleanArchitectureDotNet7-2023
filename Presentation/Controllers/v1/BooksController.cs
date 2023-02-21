@@ -5,7 +5,7 @@ using Application.Features.BookFeatures.Queries;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Persistence.v1;
+namespace Presentation.v1;
 
 public class BooksController : BaseApiController
 {

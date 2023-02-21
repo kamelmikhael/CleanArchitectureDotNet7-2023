@@ -7,7 +7,7 @@ public class PagedResponseDto<T>
     /// <summary>
     /// Private constructor called by the CreateAsync method.
     /// </summary>
-    private PagedResponseDto(
+    internal PagedResponseDto(
         List<T> data,
         int count,
         int pageIndex,

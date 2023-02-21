@@ -5,12 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region Add services to the container.
 
 builder.Services.Scan(selector => selector
     .FromAssemblies(
-        Infrastructure.AssemblyReference.Assembly,
-        Persistence.AssemblyReference.Assembly)
+        Infrastructure.AssemblyReference.Assembly)
     .AddClasses(false)
     .AsImplementedInterfaces()
     .WithScopedLifetime()
@@ -22,16 +21,18 @@ builder.Services.AddMediatR(Application.AssemblyReference.Assembly);
 builder.Services.AddAutoMapper(Application.AssemblyReference.Assembly);
 
 builder.Services.AddControllers()
-    .AddApplicationPart(Persistence.AssemblyReference.Assembly);
+    .AddApplicationPart(Presentation.AssemblyReference.Assembly);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
+#region Swagger/OpenAPI Service
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#endregion
 
 #region API Versioning
 // Add API Versioning to the Project
@@ -46,19 +47,51 @@ builder.Services.AddApiVersioning(config =>
 });
 #endregion
 
+#endregion
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Configure the HTTP request pipeline.
+
+#region Use Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+#endregion
+
+#region Culture Select Middleware
+app.Use((context, next) =>
+{
+    var userLangs = context.Request.Headers["Accept-Language"].ToString();
+    var lang = userLangs.Split(',').FirstOrDefault();
+
+    //If no language header was provided, then default to english.
+    if (string.IsNullOrEmpty(lang))
+    {
+        lang = "en";
+    }
+
+    //You could set the environment culture based on the language.
+    Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(lang);
+    Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
+    //you could save the language preference for later use as well.
+    context.Items["Culture"] = lang;
+    context.Items["ClientCulture"] = Thread.CurrentThread.CurrentUICulture.Name;
+
+
+    return next();
+});
+#endregion
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+#endregion
 
 app.Run();

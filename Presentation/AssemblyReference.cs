@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Persistence;
+namespace Presentation;
 
 public static class AssemblyReference
 {

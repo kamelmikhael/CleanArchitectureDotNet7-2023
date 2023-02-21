@@ -33,7 +33,7 @@ internal sealed class BookDeleteCommandHandler : ICommandHandler<BookDeleteComma
 
         if (entity is null)
         {
-            return AppResult.Failure(DomainErrors.Record.NotFound);
+            return AppResult.Failure(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
         _repository.Remove(entity);

@@ -34,7 +34,7 @@ internal sealed class BookGetByIdQueryHandler : IQueryHandler<BookGetByIdQuery, 
 
         if (entity is null)
         {
-            return AppResult.Failure<BookDto>(DomainErrors.Record.NotFound);
+            return AppResult.Failure<BookDto>(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
         return entity;

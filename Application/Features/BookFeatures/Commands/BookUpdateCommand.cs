@@ -33,7 +33,7 @@ public sealed class BookUpdateCommandHandler : ICommandHandler<BookUpdateCommand
 
         if (entity is null)
         {
-            return AppResult.Failure(DomainErrors.Record.NotFound);
+            return AppResult.Failure(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
         entity.Title = request.Title;

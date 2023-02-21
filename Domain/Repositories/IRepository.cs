@@ -5,6 +5,13 @@ namespace Domain.Repositories;
 public interface IRepository<T> 
     where T : class
 {
+    Task<IEnumerable<T>> GetWithPaginationAsync(
+        Expression<Func<T, bool>> predicate,
+        int pageIndex = 0,
+        int pageSize = 10);
+
+    Task<int> CountAsync();
+
     Task<T> FindAsync(object id, CancellationToken cancellationToken = default);
 
     Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken = default);

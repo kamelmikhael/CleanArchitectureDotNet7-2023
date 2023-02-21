@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Contexts;
 using System.Linq.Expressions;
+using Domain.Entities;
+using System.Linq;
 
 namespace Infrastructure.Repositories;
 
@@ -17,6 +19,20 @@ public class Repository<T> : IRepository<T> where T : class
     #endregion
 
     #region Methods
+    public async Task<IEnumerable<T>> GetWithPaginationAsync(
+        Expression<Func<T, bool>> predicate,
+        int pageIndex = 0,
+        int pageSize = 10)
+    {
+        return await _dbSet
+            .Where(predicate)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<int> CountAsync() => await _dbSet.CountAsync();
+
     public async Task<IEnumerable<T>> ToListAsync(CancellationToken cancellationToken = default)
         => await _dbSet.ToListAsync(cancellationToken);
 

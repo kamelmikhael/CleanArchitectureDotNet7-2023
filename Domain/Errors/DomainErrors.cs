@@ -11,8 +11,8 @@ public static class DomainErrors
 {
     public static class Record
     {
-        public static readonly AppError NotFound = new AppError(
+        public static AppError NotFound(string entityName, object id) => new AppError(
             "Record.NotFound",
-            $"Record not found.");
+            $"{entityName} with [{id}] not found.");
     }
 }

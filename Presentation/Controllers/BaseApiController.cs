@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Persistence;
+namespace Presentation;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
