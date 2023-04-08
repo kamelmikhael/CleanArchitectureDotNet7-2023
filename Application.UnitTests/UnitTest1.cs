@@ -7,10 +7,10 @@ namespace Application.UnitTests
         {
         }
 
-        [Test]
-        public void Test1()
-        {
-            Assert.Pass();
-        }
+        //[Test]
+        //public void Test1()
+        //{
+        //    Assert.Pass();
+        //}
     }
 }

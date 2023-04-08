@@ -93,7 +93,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private void SetAuditProperties()
     {
         var utcNow = DateTime.UtcNow;
-        string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         Guid? currentLoggedUserId = userId is null ? null : Guid.Parse(userId);
 

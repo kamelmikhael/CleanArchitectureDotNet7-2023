@@ -10,10 +10,13 @@ using MediatR;
 
 namespace Application.Features.BookFeatures.Commands;
 
-public sealed record BookCreateCommand(string Title, string Description, BookType Type, DateTime PublishedOn)
-    : ICommand;
+public sealed record BookCreateCommand(
+    string Title, 
+    string Description, 
+    BookType Type, 
+    DateTime PublishedOn) : ICommand<Guid>;
 
-internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateCommand>
+internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateCommand, Guid>
 {
     private readonly IRepository<Book> _repository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +28,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
         _repository = cityRepository;
     }
 
-    public async Task<AppResult> Handle(BookCreateCommand request, CancellationToken cancellationToken)
+    public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)
     {
         var entity = new Book
         {
@@ -39,6 +42,6 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
         _repository.Add(entity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return AppResult.Success(Unit.Value, $"New record has been added scuccessfly with Id = {entity.Id}");
+        return AppResult.Success(entity.Id, $"New record has been added scuccessfly with Id = {entity.Id}");
     }
 }

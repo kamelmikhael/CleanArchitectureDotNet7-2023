@@ -17,11 +17,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     #endregion
 
     #region Methods
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
+    protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-    }
     #endregion
 }
