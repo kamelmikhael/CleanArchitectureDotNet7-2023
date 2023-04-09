@@ -99,5 +99,16 @@ public class PagedResponseDto<T>
             pageIndex,
             pageSize);
     }
+
+    public static PagedResponseDto<T> Create(
+        List<T> data,
+        int count,
+        int pageIndex,
+        int pageSize)
+        => new PagedResponseDto<T>(
+            data,
+            count,
+            pageIndex,
+            pageSize);
     #endregion
 }

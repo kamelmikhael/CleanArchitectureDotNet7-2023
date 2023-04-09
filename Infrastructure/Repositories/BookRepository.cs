@@ -43,4 +43,11 @@ internal sealed class BookRepository : IBookRepository
     public void Delete(Book entity)
         => _dbContext.Set<Book>().Remove(entity);
     #endregion
+
+    #region Business Methods
+    public async Task<bool> IsBookTitleUniqueAsync(
+        string title, 
+        CancellationToken cancellationToken = default)
+        => await _dbContext.Set<Book>().AnyAsync(x => x.Title != title);
+    #endregion
 }

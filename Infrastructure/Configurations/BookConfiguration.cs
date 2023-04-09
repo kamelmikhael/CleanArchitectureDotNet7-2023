@@ -10,6 +10,8 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         entity.ToTable($"{nameof(Book)}s");
 
+        entity.OwnsMany(x => x.Translations).ToJson();
+
         entity.HasQueryFilter(x => x.IsDeleted == false);
 
         OnConfigurePartial(entity);

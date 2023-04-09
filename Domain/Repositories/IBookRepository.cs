@@ -17,4 +17,8 @@ public interface IBookRepository
 
     void Delete(Book entity);
     #endregion
+
+    #region Business Methods
+    Task<bool> IsBookTitleUniqueAsync(string title, CancellationToken cancellationToken = default);
+    #endregion
 }

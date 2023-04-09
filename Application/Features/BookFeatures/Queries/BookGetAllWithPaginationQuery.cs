@@ -32,14 +32,20 @@ internal sealed class BookGetAllWithPaginationQueryHandler : IQueryHandler<BookG
     {
         var query = _repository
                 .AsNoTracking()
-                .AsQueryable()
-                .ProjectTo<BookDto>(_mapper.ConfigurationProvider);
+                .AsQueryable();
 
         query = query.WhereIf(!string.IsNullOrWhiteSpace(request.PaginationParams.Keyword),
             c => c.Title.Contains(request.PaginationParams.Keyword));
 
-        return AppResult.Success(await PagedResponseDto<BookDto>
-            .CreateAsync(query, request.PaginationParams.PageIndex, request.PaginationParams.PageSize)
-        );
+        var entitiesPagedResponse = await PagedResponseDto<Book>
+            .CreateAsync(query, request.PaginationParams.PageIndex, request.PaginationParams.PageSize);
+
+        var result = PagedResponseDto<BookDto>.Create(
+            _mapper.Map<List<BookDto>>(entitiesPagedResponse.Data),
+            entitiesPagedResponse.TotalCount,
+            entitiesPagedResponse.PageIndex,
+            entitiesPagedResponse.PageSize);
+
+        return result;
     }
 }

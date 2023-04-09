@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230409161758_Added_Translation_To_Book")]
+    partial class AddedTranslationToBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,7 +135,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Book", b =>
                 {
-                    b.OwnsMany("Domain.Entities.Book.Translations#Domain.Entities.BookTranslation", "Translations", b1 =>
+                    b.OwnsMany("Domain.Entities.BookTranslation", "Translations", b1 =>
                         {
                             b1.Property<Guid>("BookId")
                                 .HasColumnType("uniqueidentifier");
@@ -143,7 +146,7 @@ namespace Infrastructure.Migrations
 
                             b1.HasKey("BookId", "Id");
 
-                            b1.ToTable("Books", (string)null);
+                            b1.ToTable("Books");
 
                             b1.ToJson("Translations");
 

@@ -3,10 +3,10 @@ using Application.Features.BookFeatures.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
-using MediatR;
 
 namespace Application.Features.BookFeatures.Commands;
 
@@ -14,31 +14,33 @@ public sealed record BookCreateCommand(
     string Title, 
     string Description, 
     BookType Type, 
-    DateTime PublishedOn) : ICommand<Guid>;
+    DateTime PublishedOn,
+    List<BookTranslationDto> Translations) : ICommand<Guid>;
 
 internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateCommand, Guid>
 {
     private readonly IBookRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
     public BookCreateCommandHandler(
         IUnitOfWork unitOfWork,
-        IBookRepository repository)
+        IBookRepository repository,
+        IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Book
+        if(!await _repository.IsBookTitleUniqueAsync(request.Title))
         {
-            Id = Guid.NewGuid(),
-            Title = request.Title,
-            Description = request.Description,
-            Type = request.Type,
-            PublishedOn = request.PublishedOn,
-        };
+            return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
+        }
+
+        var entity = _mapper.Map<Book>(request);
 
         _repository.Add(entity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
