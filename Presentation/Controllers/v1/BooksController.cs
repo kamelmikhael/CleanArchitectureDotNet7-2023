@@ -72,14 +72,10 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete(nameof(Delete) + "/{id:guid}")]
-    public async Task<IActionResult> Delete(
+    public async Task<AppResult> Delete(
         Guid id,
-        CancellationToken cancellationToken)
-    {
-        var result = await Sender.Send(
+        CancellationToken cancellationToken) 
+        => await Sender.Send(
             new BookDeleteCommand(id), cancellationToken
         );
-
-        return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
-    }
 }

@@ -18,14 +18,15 @@ public sealed record BookCreateCommand(
 
 internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateCommand, Guid>
 {
-    private readonly IRepository<Book> _repository;
+    private readonly IBookRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
 
     public BookCreateCommandHandler(
-        IUnitOfWork repository, IRepository<Book> cityRepository)
+        IUnitOfWork unitOfWork,
+        IBookRepository repository)
     {
-        _unitOfWork = repository;
-        _repository = cityRepository;
+        _unitOfWork = unitOfWork;
+        _repository = repository;
     }
 
     public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)

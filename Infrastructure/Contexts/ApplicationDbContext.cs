@@ -1,11 +1,11 @@
-﻿using Application.Abstractions;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Infrastructure.Contexts;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+public class ApplicationDbContext : DbContext
 {
     #region Constructors
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

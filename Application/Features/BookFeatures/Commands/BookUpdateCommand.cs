@@ -14,22 +14,21 @@ public sealed record BookUpdateCommand(Guid Id, string Title, string Description
 
 public sealed class BookUpdateCommandHandler : ICommandHandler<BookUpdateCommand>
 {
-    private readonly IRepository<Book> _repository;
+    private readonly IBookRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
 
     public BookUpdateCommandHandler(
-        IUnitOfWork repository, 
-        IRepository<Book> cityRepository)
+        IUnitOfWork unitOfWork,
+        IBookRepository repository)
     {
-        _unitOfWork = repository;
-        _repository = cityRepository;
+        _unitOfWork = unitOfWork;
+        _repository = repository;
     }
 
     public async Task<AppResult> Handle(BookUpdateCommand request, CancellationToken cancellationToken)
     {
         var entity = await _repository
-                .AsQueryable()
-                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .GetByIdAsync(request.Id, cancellationToken);
 
         if (entity is null)
         {

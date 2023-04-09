@@ -14,29 +14,29 @@ public sealed record BookGetByIdQuery(Guid Id) : IQuery<BookDto>;
 
 internal sealed class BookGetByIdQueryHandler : IQueryHandler<BookGetByIdQuery, BookDto>
 {
-    private readonly IRepository<Book> _repository;
+    private readonly IBookRepository _repository;
     private readonly IMapper _mapper;
 
-    public BookGetByIdQueryHandler(IRepository<Book> cityRepository
-        , IMapper mapper)
+    public BookGetByIdQueryHandler(
+        IBookRepository repository, 
+        IMapper mapper)
     {
-        _repository = cityRepository;
+        _repository = repository;
         _mapper = mapper;
     }
 
     public async Task<AppResult<BookDto>> Handle(BookGetByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _repository
-            .AsNoTracking()
-            .AsQueryable()
-            .ProjectTo<BookDto>(_mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+            .GetByIdAsync(request.Id, cancellationToken);
 
         if (entity is null)
         {
             return AppResult.Failure<BookDto>(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
-        return entity;
+        var dto = _mapper.Map<BookDto>(entity);
+
+        return dto;
     }
 }
