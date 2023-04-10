@@ -1,3 +1,4 @@
+using Api.Middlewares;
 using Application.Behaviors;
 using Domain.Repositories;
 using FluentValidation;
@@ -14,6 +15,11 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<IBookRepository, CachedBookRepository>();
 #endregion
+
+#region Global Exception Handling Middleware
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+#endregion
+
 
 #region Add services to the container.
 
@@ -105,6 +111,10 @@ app.Use((context, next) =>
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+#region Global Exception Handling Middleware
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+#endregion
 
 app.MapControllers();
 
