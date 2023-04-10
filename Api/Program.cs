@@ -16,6 +16,15 @@ builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<IBookRepository, CachedBookRepository>();
 #endregion
 
+#region Distributed Cache using Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    string connection = builder.Configuration.GetConnectionString("Redis")!;
+
+    options.Configuration = connection;
+});
+#endregion
+
 #region Global Exception Handling Middleware
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 #endregion
