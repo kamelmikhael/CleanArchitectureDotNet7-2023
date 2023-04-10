@@ -44,12 +44,18 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(nameof(Create))]
-    public async Task<AppResult> Create(
-        BookCreateCommand input
-        , CancellationToken cancellationToken)
-        => await Sender.Send(
-            input, cancellationToken
-        );
+    public async Task<IActionResult> Create(
+        BookCreateCommand input, CancellationToken cancellationToken)
+    {
+        var result = await Sender.Send(input, cancellationToken);
+
+        if(result.IsFailure)
+        {
+            return HandleFailure(result);
+        }
+
+        return Ok(result);
+    }
 
     /// <summary>
     /// Update record

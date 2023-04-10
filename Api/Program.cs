@@ -1,3 +1,5 @@
+using Application.Behaviors;
+using FluentValidation;
 using Infrastructure.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,12 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddMediatR(Application.AssemblyReference.Assembly);
 builder.Services.AddAutoMapper(Application.AssemblyReference.Assembly);
+
+#region Fluent Validation
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+builder.Services.AddValidatorsFromAssembly(Application.AssemblyReference.Assembly,
+    includeInternalTypes: true);
+#endregion
 
 builder.Services.AddControllers()
     .AddApplicationPart(Presentation.AssemblyReference.Assembly);

@@ -7,7 +7,6 @@ using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
-
 namespace Application.Features.BookFeatures.Commands;
 
 public sealed record BookCreateCommand(

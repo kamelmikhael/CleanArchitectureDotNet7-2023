@@ -21,6 +21,8 @@ public class AppResult
 
     public bool IsSuccess { get; set; }
 
+    public bool IsFailure => !IsSuccess;
+
     public string Message { get; set; }
 
     public AppError Error { get; set; } = default;
