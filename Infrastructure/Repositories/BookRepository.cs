@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-internal sealed class BookRepository : IBookRepository
+public sealed class BookRepository : IBookRepository
 {
     private readonly ApplicationDbContext _dbContext;
 

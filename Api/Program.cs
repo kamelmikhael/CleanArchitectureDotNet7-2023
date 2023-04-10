@@ -1,11 +1,19 @@
 using Application.Behaviors;
+using Domain.Repositories;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region In-memory Cache
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<BookRepository>();
+builder.Services.AddScoped<IBookRepository, CachedBookRepository>();
+#endregion
 
 #region Add services to the container.
 
