@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.UnitOfWorks;
 
-public class UnitOfWork : IUnitOfWork, IDisposable
+internal sealed class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly ApplicationDbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -24,7 +24,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //OnBeforeSaveChanges();
+        OnBeforeSaveChanges();
 
         SetAuditProperties();
 
@@ -112,8 +112,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         foreach (EntityEntry entry in entities)
         {
             UpdateCreatedEntry(utcNow, entry, currentLoggedUserId);
-
-            UpdateModifiedEntry(utcNow, entry, currentLoggedUserId);
         }
     }
 
@@ -139,7 +137,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
         foreach (EntityEntry entry in entities)
         {
-            UpdateModifiedEntry(utcNow, entry, currentLoggedUserId);
             UpdateDeletedEntry(utcNow, entry, currentLoggedUserId);
 
             entry.State = EntityState.Modified;

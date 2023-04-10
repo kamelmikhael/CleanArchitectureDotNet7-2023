@@ -21,19 +21,14 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuditType = table.Column<int>(type: "int", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    TableName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    PrimaryKey = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    OldValues = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NewValues = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AffectedColumns = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    TableName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    PrimaryKey = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    OldValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NewValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AffectedColumns = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeleterUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,7 +50,8 @@ namespace Infrastructure.Migrations
                     LastModifierUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeleterUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Translations = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

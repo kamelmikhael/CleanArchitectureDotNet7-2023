@@ -34,10 +34,10 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
 
     public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)
     {
-        if(!await _repository.IsBookTitleUniqueAsync(request.Title))
-        {
-            return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
-        }
+        //if(!await _repository.IsBookTitleUniqueAsync(request.Title))
+        //{
+        //    return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
+        //}
 
         var entity = _mapper.Map<Book>(request);
 

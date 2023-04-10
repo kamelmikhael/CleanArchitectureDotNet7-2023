@@ -29,7 +29,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AffectedColumns")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("AuditType")
@@ -41,41 +40,21 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("CreatorUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DeleterUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastModifierUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("NewValues")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OldValues")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimaryKey")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TableName")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -132,7 +111,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Book", b =>
                 {
-                    b.OwnsMany("Domain.Entities.Book.Translations#Domain.Entities.BookTranslation", "Translations", b1 =>
+                    b.OwnsMany("Domain.Entities.BookTranslation", "Translations", b1 =>
                         {
                             b1.Property<Guid>("BookId")
                                 .HasColumnType("uniqueidentifier");
@@ -141,9 +120,21 @@ namespace Infrastructure.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int");
 
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Language")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
                             b1.HasKey("BookId", "Id");
 
-                            b1.ToTable("Books", (string)null);
+                            b1.ToTable("Books");
 
                             b1.ToJson("Translations");
 

@@ -1,14 +1,9 @@
 ﻿using Domain.Common;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities;
 
-public class AuditLog : FullAuditedEntity<Guid>
+public class AuditLog : CreationAuditedEntity<Guid>
 {
     /// <summary>
     /// Audit Type
@@ -18,30 +13,30 @@ public class AuditLog : FullAuditedEntity<Guid>
     /// <summary>
     /// Type of Audit
     /// </summary>
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// Table Name
     /// </summary>
-    public string TableName { get; set; }
+    public string? TableName { get; set; }
 
     /// <summary>
     /// Table Primary Key
     /// </summary>
-    public string PrimaryKey { get; set; }
+    public string? PrimaryKey { get; set; }
 
     /// <summary>
     /// Old Values
     /// </summary>
-    public string OldValues { get; set; }
+    public string? OldValues { get; set; }
 
     /// <summary>
     /// New Values
     /// </summary>
-    public string NewValues { get; set; }
+    public string? NewValues { get; set; }
 
     /// <summary>
     /// Affected Columns
     /// </summary>
-    public string AffectedColumns { get; set; }
+    public string? AffectedColumns { get; set; }
 }

@@ -19,8 +19,6 @@ public partial class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
         entity.Property(x => x.PrimaryKey)
             .HasMaxLength(200);
 
-        entity.HasQueryFilter(x => x.IsDeleted == false);
-
         OnConfigurePartial(entity);
     }
 
