@@ -2,7 +2,7 @@
 using Domain.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Repositories.Books;
 
 public class CachedBookRepository : IBookRepository
 {

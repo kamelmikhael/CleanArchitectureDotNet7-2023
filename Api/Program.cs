@@ -3,7 +3,7 @@ using Application.Behaviors;
 using Domain.Repositories;
 using FluentValidation;
 using Infrastructure.Contexts;
-using Infrastructure.Repositories;
+using Infrastructure.Repositories.Books;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -1,9 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Infrastructure.Contexts;
+using Infrastructure.Specifications;
+using Infrastructure.Specifications.Books;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Repositories.Books;
 
 public sealed class BookRepository : IBookRepository
 {
@@ -21,8 +23,8 @@ public sealed class BookRepository : IBookRepository
             .ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<Book>> GetAllWithPagingAsync(
-        int page, 
-        int pageSize, 
+        int page,
+        int pageSize,
         CancellationToken cancellationToken = default)
         => await _dbContext.Set<Book>()
             .AsNoTracking()
@@ -31,9 +33,10 @@ public sealed class BookRepository : IBookRepository
             .ToListAsync(cancellationToken);
 
     public async Task<Book?> GetByIdAsync(
-        Guid id, 
+        Guid id,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Set<Book>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        => await ApplySpecification(new BookByIdWithAuthorSpecification(id))
+            .FirstOrDefaultAsync(cancellationToken);
     #endregion
 
     #region Write Methods
@@ -46,8 +49,11 @@ public sealed class BookRepository : IBookRepository
 
     #region Business Methods
     public async Task<bool> IsBookTitleUniqueAsync(
-        string title, 
+        string title,
         CancellationToken cancellationToken = default)
         => await _dbContext.Set<Book>().AnyAsync(x => x.Title != title);
     #endregion
+
+    private IQueryable<Book> ApplySpecification(Specification<Book> specification)
+        => SpecificationEvaluator.GetQuery(_dbContext.Set<Book>(), specification);
 }
