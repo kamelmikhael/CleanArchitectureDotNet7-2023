@@ -1,10 +1,12 @@
 using Api.Middlewares;
+using Api.OptionsSetup;
 using Application.Behaviors;
 using Domain.Repositories;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Infrastructure.Repositories.Books;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -78,6 +80,13 @@ builder.Services.AddApiVersioning(config =>
 });
 #endregion
 
+#region Add Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+#endregion
+
 #endregion
 
 var app = builder.Build();
@@ -119,6 +128,7 @@ app.Use((context, next) =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 #region Global Exception Handling Middleware
