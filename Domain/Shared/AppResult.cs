@@ -1,4 +1,6 @@
-﻿namespace Domain.Shared;
+﻿using Domain.Errors;
+
+namespace Domain.Shared;
 
 public class AppResult
 {
@@ -36,6 +38,9 @@ public class AppResult
 
     public static AppResult<TValue> Failure<TValue>(AppError error)
         => new(default, false, error);
+
+    public static AppResult NotFound(string message)
+        => new(false, new("Record.NotFound", message));
 }
 
 public class AppResult<TValue> : AppResult

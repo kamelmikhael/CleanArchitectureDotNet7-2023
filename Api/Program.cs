@@ -3,10 +3,12 @@ using Api.OptionsSetup;
 using Application.Behaviors;
 using Domain.Repositories;
 using FluentValidation;
+using Infrastructure.Authentications;
 using Infrastructure.Contexts;
 using Infrastructure.Repositories.Books;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -85,6 +87,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+//builder.Services.AddAuthorization();
+//builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 #endregion
 
 #endregion
