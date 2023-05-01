@@ -1,8 +1,10 @@
-﻿using Domain.Entities;
+﻿using Azure;
+using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
+using System.Threading;
 
 namespace Infrastructure.Repositories.Books;
 
@@ -23,24 +25,19 @@ public class CachedBookRepository : IBookRepository
     }
 
     public void Add(Book entity)
-    {
-        _decorated.Add(entity);
-    }
+        => _decorated.Add(entity);
+
+    public Task<int> CountAsync(CancellationToken cancellationToken = default)
+        => _decorated.CountAsync(cancellationToken);
 
     public void Delete(Book entity)
-    {
-        _decorated.Delete(entity);
-    }
+        => _decorated.Delete(entity);
 
     public async Task<IEnumerable<Book>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await _decorated.GetAllAsync(cancellationToken);
-    }
+        => await _decorated.GetAllAsync(cancellationToken);
 
-    public async Task<IEnumerable<Book>> GetAllWithPagingAsync(int page, int pageSize, CancellationToken cancellationToken = default)
-    {
-        return await _decorated.GetAllWithPagingAsync(page, pageSize, cancellationToken);
-    }
+    public async Task<IEnumerable<Book>> GetAllWithPagingAsync(string keyword, int page, int pageSize, CancellationToken cancellationToken = default)
+        => await _decorated.GetAllWithPagingAsync(keyword, page, pageSize, cancellationToken);
 
     public async Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

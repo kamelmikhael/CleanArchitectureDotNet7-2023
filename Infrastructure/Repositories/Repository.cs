@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Contexts;
 using System.Linq.Expressions;
-using Domain.Entities;
-using System.Linq;
+using Infrastructure.Specifications;
+using AutoMapper;
+using Application.Extensions;
 
 namespace Infrastructure.Repositories;
 
@@ -63,5 +64,8 @@ public class Repository<T> : IRepository<T> where T : class
     public IQueryable<T> AsNoTracking() => _dbSet.AsNoTracking();
 
     public IQueryable<T> AsQueryable() => _dbSet.AsQueryable();
+
+    public IQueryable<T> ApplySpecification(Specification<T> specification)
+        => SpecificationEvaluator.GetQuery(_dbSet, specification);
     #endregion
 }

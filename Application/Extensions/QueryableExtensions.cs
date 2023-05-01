@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System.Linq.Expressions;
 
 namespace Application.Extensions;
 
@@ -30,4 +32,7 @@ public static class QueryableExtensions
 
         return query.Where(predicate);
     }
+
+    public static IQueryable<TDto> ProjectTo<T, TDto>(this IQueryable<T> query, IMapper mapper)
+        => query.ProjectTo<TDto>(mapper.ConfigurationProvider);
 }

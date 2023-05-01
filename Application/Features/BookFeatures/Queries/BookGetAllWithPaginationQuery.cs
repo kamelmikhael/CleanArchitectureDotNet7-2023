@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Application.Abstractions.Messaging;
 using Application.Common;
 using Application.Features.BookFeatures.Dtos;
@@ -15,11 +14,11 @@ public sealed record BookGetAllWithPaginationQuery(BookPagedRequestDto Paginatio
 
 internal sealed class BookGetAllWithPaginationQueryHandler : IQueryHandler<BookGetAllWithPaginationQuery, PagedResponseDto<BookDto>>
 {
-    private readonly IRepository<Book> _repository;
+    private readonly IBookRepository _repository;
     private readonly IMapper _mapper;
 
     public BookGetAllWithPaginationQueryHandler(
-        IRepository<Book> repository,
+        IBookRepository repository,
         IMapper mapper)
     {
         _repository = repository;
@@ -30,21 +29,20 @@ internal sealed class BookGetAllWithPaginationQueryHandler : IQueryHandler<BookG
         BookGetAllWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var query = _repository
-                .AsNoTracking()
-                .AsQueryable();
+        var books = await _repository
+                .GetAllWithPagingAsync(
+                    request.PaginationParams.Keyword ?? "",
+                    request.PaginationParams.PageIndex, 
+                    request.PaginationParams.PageSize,
+                    cancellationToken);
 
-        query = query.WhereIf(!string.IsNullOrWhiteSpace(request.PaginationParams.Keyword),
-            c => c.Title.Contains(request.PaginationParams.Keyword));
-
-        var entitiesPagedResponse = await PagedResponseDto<Book>
-            .CreateAsync(query, request.PaginationParams.PageIndex, request.PaginationParams.PageSize);
+        var count = await _repository.CountAsync(cancellationToken);
 
         var result = PagedResponseDto<BookDto>.Create(
-            _mapper.Map<List<BookDto>>(entitiesPagedResponse.Data),
-            entitiesPagedResponse.TotalCount,
-            entitiesPagedResponse.PageIndex,
-            entitiesPagedResponse.PageSize);
+            _mapper.Map<List<BookDto>>(books),
+            count,
+            request.PaginationParams.PageIndex,
+            request.PaginationParams.PageSize);
 
         return result;
     }

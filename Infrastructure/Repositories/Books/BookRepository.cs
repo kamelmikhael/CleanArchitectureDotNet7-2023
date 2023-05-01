@@ -23,13 +23,11 @@ public sealed class BookRepository : IBookRepository
             .ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<Book>> GetAllWithPagingAsync(
+        string keyword,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Set<Book>()
-            .AsNoTracking()
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+        => await ApplySpecification(new BookGetAllWithPaginationSpecification(keyword, page, pageSize))
             .ToListAsync(cancellationToken);
 
     public async Task<Book?> GetByIdAsync(
@@ -37,6 +35,10 @@ public sealed class BookRepository : IBookRepository
         CancellationToken cancellationToken = default)
         => await ApplySpecification(new BookByIdWithAuthorSpecification(id))
             .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<int> CountAsync(
+        CancellationToken cancellationToken = default)
+        => await _dbContext.Set<Book>().CountAsync(cancellationToken);
     #endregion
 
     #region Write Methods
