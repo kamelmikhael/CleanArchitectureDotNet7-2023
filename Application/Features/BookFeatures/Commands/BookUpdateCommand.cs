@@ -35,8 +35,8 @@ public sealed class BookUpdateCommandHandler : ICommandHandler<BookUpdateCommand
             return AppResult.Failure(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
-        entity.Title = request.Title;
-        entity.Description = request.Description;
+        entity.SetTitle(request.Title);
+        entity.SetDescription(request.Description);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

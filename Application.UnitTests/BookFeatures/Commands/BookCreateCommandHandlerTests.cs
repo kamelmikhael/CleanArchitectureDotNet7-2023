@@ -65,10 +65,10 @@ public class BookCreateCommandHandlerTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        _mapperMock.Setup(
-            x => x.Map<Book>(
-                It.IsAny<BookCreateCommand>()))
-            .Returns(new Book { Id = Guid.NewGuid() });
+        //_mapperMock.Setup(
+        //    x => x.Map<Book>(
+        //        It.IsAny<BookCreateCommand>()))
+        //    .Returns(new Book { Id = Guid.NewGuid() });
 
         // Arrange
         var command = new BookCreateCommand(
@@ -101,10 +101,10 @@ public class BookCreateCommandHandlerTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        _mapperMock.Setup(
-            x => x.Map<Book>(
-                It.IsAny<BookCreateCommand>()))
-            .Returns(new Book { Id = Guid.NewGuid() });
+        //_mapperMock.Setup(
+        //    x => x.Map<Book>(
+        //        It.IsAny<BookCreateCommand>()))
+        //    .Returns(new Book { Id = Guid.NewGuid() });
 
         // Arrange
         var command = new BookCreateCommand(
