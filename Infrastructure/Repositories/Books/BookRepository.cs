@@ -50,10 +50,10 @@ public sealed class BookRepository : IBookRepository
     #endregion
 
     #region Business Methods
-    public async Task<bool> IsBookTitleUniqueAsync(
+    public async Task<bool> IsBookTitleExistAsync(
         string title,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Set<Book>().AnyAsync(x => x.Title != title);
+        => await _dbContext.Set<Book>().AnyAsync(x => x.Title == title);
     #endregion
 
     private IQueryable<Book> ApplySpecification(Specification<Book> specification)

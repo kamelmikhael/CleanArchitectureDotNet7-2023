@@ -21,6 +21,6 @@ public interface IBookRepository
     #endregion
 
     #region Business Methods
-    Task<bool> IsBookTitleUniqueAsync(string title, CancellationToken cancellationToken = default);
+    Task<bool> IsBookTitleExistAsync(string title, CancellationToken cancellationToken = default);
     #endregion
 }

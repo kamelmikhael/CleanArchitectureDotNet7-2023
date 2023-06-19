@@ -3,14 +3,18 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
+//Rich domain model
 public class Book : FullAuditedEntity<Guid>
 {
+    public const int MaxTitleLength = 50;
+    public const int MaxDescriptionLength = 500;
+
     protected Book()
     {
         
     }
 
-    public Book(string title, string description, BookType type, DateTime publishedOn)
+    public Book(string title, string description, BookType type, DateOnly publishedOn)
     {
         Title = title;
         Description = description;
@@ -19,11 +23,18 @@ public class Book : FullAuditedEntity<Guid>
     }
 
     public string Title { get; private set; }
-    public string Description { get; private set; }
-    public BookType Type { get; private set; }
-    public DateTime PublishedOn { get; private set; }
 
-    public ICollection<BookTranslation> Translations { get; private set; } = new List<BookTranslation>();
+    public string Description { get; private set; }
+
+    public BookType Type { get; private set; }
+
+    public DateOnly PublishedOn { get; private set; }
+
+    public TimeOnly? PublishedTime { get; private set; }
+
+
+    private readonly List<BookTranslation> _translations = new();
+    public IReadOnlyCollection<BookTranslation>? Translations => _translations;
 
     public void SetTitle(string title)
     {
@@ -35,6 +46,18 @@ public class Book : FullAuditedEntity<Guid>
     {
         // TODO: Validate description here
         Description = description;
+    }
+
+    public void AddTranslation(BookTranslation translation)
+    {
+        // TODO: Validate translation here
+        _translations.Add(translation);
+    }
+
+    public void AddTranslationRange(List<BookTranslation> translations)
+    {
+        // TODO: Validate translation here
+        _translations.AddRange(translations);
     }
 }
 

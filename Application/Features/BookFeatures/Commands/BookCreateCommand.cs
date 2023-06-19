@@ -12,8 +12,8 @@ namespace Application.Features.BookFeatures.Commands;
 public sealed record BookCreateCommand(
     string Title, 
     string Description, 
-    BookType Type, 
-    DateTime PublishedOn,
+    BookType Type,
+    DateOnly PublishedOn,
     List<BookTranslationDto> Translations) : ICommand<Guid>;
 
 internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateCommand, Guid>
@@ -34,7 +34,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
 
     public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)
     {
-        if (await _repository.IsBookTitleUniqueAsync(request.Title))
+        if (await _repository.IsBookTitleExistAsync(request.Title))
         {
             return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
         }

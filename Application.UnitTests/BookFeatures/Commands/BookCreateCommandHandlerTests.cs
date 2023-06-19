@@ -29,7 +29,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleUniqueAsync(
+            x => x.IsBookTitleExistAsync(
                 It.IsAny<string>(), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -39,7 +39,7 @@ public class BookCreateCommandHandlerTests
             "Book 1",
             "Description",
             BookType.Story,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             new() { });
 
         var handler = new BookCreateCommandHandler(
@@ -60,7 +60,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleUniqueAsync(
+            x => x.IsBookTitleExistAsync(
                 It.IsAny<string>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -75,7 +75,7 @@ public class BookCreateCommandHandlerTests
             "Book 1",
             "Description",
             BookType.Story,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             new() { });
 
         var handler = new BookCreateCommandHandler(
@@ -96,7 +96,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleUniqueAsync(
+            x => x.IsBookTitleExistAsync(
                 It.IsAny<string>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -111,7 +111,7 @@ public class BookCreateCommandHandlerTests
             "Book 1",
             "Description",
             BookType.Story,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             new() { });
 
         var handler = new BookCreateCommandHandler(
@@ -134,7 +134,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleUniqueAsync(
+            x => x.IsBookTitleExistAsync(
                 It.IsAny<string>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -144,7 +144,7 @@ public class BookCreateCommandHandlerTests
             "Book 1",
             "Description",
             BookType.Story,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             new() { });
 
         var handler = new BookCreateCommandHandler(
