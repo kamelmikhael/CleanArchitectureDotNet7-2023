@@ -10,23 +10,23 @@ namespace Infrastructure.Configurations;
 
 public partial class BookConfiguration : IEntityTypeConfiguration<Book>
 {
-    public void Configure(EntityTypeBuilder<Book> entity)
+    public void Configure(EntityTypeBuilder<Book> builder)
     {
-        entity.ToTable(TableNames.Books, SchemaNames.BK, t => t.IsTemporal());
+        builder.ToTable(TableNames.Books, SchemaNames.BK, t => t.IsTemporal());
 
-        entity.Property(x => x.Title)
+        builder.Property(x => x.Title)
             .HasMaxLength(Book.MaxTitleLength)
             .IsRequired();
 
-        entity.Property(x => x.Description)
+        builder.Property(x => x.Description)
             .HasMaxLength(Book.MaxDescriptionLength)
             .IsRequired();
 
-        entity.Property( x => x.PublishedOn)
+        builder.Property( x => x.PublishedOn)
             .HasColumnType("date")
             .HasConversion<DateOnlyConverter, DateOnlyComparer>();
 
-        entity.Property(x => x.PublishedTime)
+        builder.Property(x => x.PublishedTime)
             .HasColumnType("time")
             .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
 
@@ -37,22 +37,21 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
             Encoder = JavaScriptEncoder.Create(new TextEncoderSettings(System.Text.Unicode.UnicodeRanges.All))
         };
 
-        entity.Property(p => p.Translations)
+        builder.Property(p => p.Translations)
             .HasConversion(
                 translationValue => JsonSerializer.Serialize(translationValue, jsonSerializationOptions),
                 dbValue => JsonSerializer.Deserialize<List<BookTranslation>>(dbValue, jsonSerializationOptions)!);
 
-        entity.Property(p => p.Type)
+        builder.Property(p => p.Type)
             .HasConversion(
                 enumValue => enumValue.ToString(),
                 dbValue => Enum.Parse<BookType>(dbValue))
             .HasMaxLength(Book.MaxTypeLength);
 
-        entity.HasQueryFilter(x => x.IsDeleted == false);
+        builder.HasQueryFilter(x => x.IsDeleted == false);
 
-        OnConfigurePartial(entity);
+        OnConfigurePartial(builder);
     }
 
     partial void OnConfigurePartial(EntityTypeBuilder<Book> entity);
 }
-

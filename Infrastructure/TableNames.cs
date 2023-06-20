@@ -17,4 +17,6 @@ internal static class SchemaNames
 public static class TableNames
 {
     public static readonly string Books = nameof(Books);
+    public static readonly string RequestTypes = nameof(RequestTypes);
+    public static readonly string Countries = nameof(Countries);
 }

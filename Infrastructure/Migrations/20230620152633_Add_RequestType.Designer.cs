@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230620152633_Add_RequestType")]
+    partial class AddRequestType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,108 +141,6 @@ namespace Infrastructure.Migrations
                                     .HasPeriodEnd("PeriodEnd")
                                     .HasColumnName("PeriodEnd");
                             }));
-                });
-
-            modelBuilder.Entity("Domain.Entities.Lookups.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Alpha3Code")
-                        .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<int>("CallingCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodEnd");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodStart");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries", "LK");
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                            {
-                                ttb.UseHistoryTable("CountriesHistory", "LK");
-                                ttb
-                                    .HasPeriodStart("PeriodStart")
-                                    .HasColumnName("PeriodStart");
-                                ttb
-                                    .HasPeriodEnd("PeriodEnd")
-                                    .HasColumnName("PeriodEnd");
-                            }));
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Alpha3Code = "SAU",
-                            CallingCode = 966,
-                            Name = "Saudi Arabia",
-                            NameAr = "المملكة العربية السعودية"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Alpha3Code = "ARE",
-                            CallingCode = 971,
-                            Name = "Arab Emirates",
-                            NameAr = "الامارات  العربية المتحدة"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Alpha3Code = "OMN",
-                            CallingCode = 968,
-                            Name = "Oman",
-                            NameAr = "عمان"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Alpha3Code = "KWT",
-                            CallingCode = 965,
-                            Name = "Kuwait",
-                            NameAr = "الكويت"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Alpha3Code = "BHR",
-                            CallingCode = 973,
-                            Name = "Bahrain",
-                            NameAr = "البحرين"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Alpha3Code = "QAT",
-                            CallingCode = 974,
-                            Name = "Qatar",
-                            NameAr = "قطر"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.StaticLookups.RequestType", b =>
