@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,7 +12,7 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
 {
     public void Configure(EntityTypeBuilder<Book> entity)
     {
-        entity.ToTable($"{nameof(Book)}s");
+        entity.ToTable(TableNames.Books, SchemaNames.BK, t => t.IsTemporal());
 
         entity.Property(x => x.Title)
             .HasMaxLength(Book.MaxTitleLength)
@@ -38,8 +39,14 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
 
         entity.Property(p => p.Translations)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, jsonSerializationOptions),
-                v => JsonSerializer.Deserialize<List<BookTranslation>>(v, jsonSerializationOptions)!);
+                translationValue => JsonSerializer.Serialize(translationValue, jsonSerializationOptions),
+                dbValue => JsonSerializer.Deserialize<List<BookTranslation>>(dbValue, jsonSerializationOptions)!);
+
+        entity.Property(p => p.Type)
+            .HasConversion(
+                enumValue => enumValue.ToString(),
+                dbValue => Enum.Parse<BookType>(dbValue))
+            .HasMaxLength(Book.MaxTypeLength);
 
         entity.HasQueryFilter(x => x.IsDeleted == false);
 

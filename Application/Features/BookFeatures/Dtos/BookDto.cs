@@ -8,7 +8,7 @@ public sealed class BookDto : BaseEntityDto<Guid>
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public DateTime PublishedOn { get; set; }
+    public DateOnly PublishedOn { get; set; }
 
     public List<BookTranslationDto> Translations { get; set; } = new();
 }

@@ -8,6 +8,7 @@ public class Book : FullAuditedEntity<Guid>
 {
     public const int MaxTitleLength = 50;
     public const int MaxDescriptionLength = 500;
+    public const int MaxTypeLength = 50;
 
     protected Book()
     {
