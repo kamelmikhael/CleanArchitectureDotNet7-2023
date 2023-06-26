@@ -12,7 +12,7 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public Task Send(string email, string subject, string message)
+    public Task SendAsync(string email, string subject, string message)
     {
         _logger.LogInformation($"Message: {message} has been send to Email: {email} with subject: {subject}");
         return Task.CompletedTask;

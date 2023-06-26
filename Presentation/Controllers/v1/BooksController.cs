@@ -3,6 +3,7 @@ using Application.Features.BookFeatures.Commands;
 using Application.Features.BookFeatures.Dtos;
 using Application.Features.BookFeatures.Queries;
 using Domain.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.v1;
@@ -16,6 +17,8 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(nameof(GetListWithPagination))]
+    //[ProducesResponseType(typeof(AppResult<PagedResponseDto<BookDto>>), StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<AppResult<PagedResponseDto<BookDto>>> GetListWithPagination(
         [FromQuery] BookPagedRequestDto input, 
         CancellationToken cancellationToken)
