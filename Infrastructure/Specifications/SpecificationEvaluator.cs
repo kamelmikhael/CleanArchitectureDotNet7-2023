@@ -17,7 +17,12 @@ public static class SpecificationEvaluator
             queryable = queryable.AsSplitQuery();
         }
 
-        if(specification.Criteria is not null)
+        if (specification.IsNoTracking)
+        {
+            queryable = queryable.AsNoTracking();
+        }
+
+        if (specification.Criteria is not null)
         {
             queryable = queryable.Where(specification.Criteria);
         }

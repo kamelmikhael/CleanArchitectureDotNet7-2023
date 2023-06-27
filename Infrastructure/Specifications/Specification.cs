@@ -17,6 +17,7 @@ public abstract class Specification<TEntity>
     public Expression<Func<TEntity, object>>? OrderByDescendingExpression { get; private set; }
 
     public bool IsSplitQuery { get; protected set; }
+    public bool IsNoTracking { get; protected set; }
 
     public bool IsPagedResult { get; protected set; }
     public int PageIndex { get; protected set; } = 0;

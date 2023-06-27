@@ -51,16 +51,26 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
             return AppResult.Failure<Guid>(titleResult.Error);
         }
 
-        var entity = new Book(
+        var isTitleAlreadyUsed = await _repository.IsBookTitleExistAsync(titleResult.Value, cancellationToken);
+
+        var bookCreateResult = Book.Create(
             Guid.NewGuid(),
             titleResult.Value,
             request.Description,
             request.Type,
-            request.PublishedOn);
+            request.PublishedOn,
+            isTitleAlreadyUsed);
 
-        _repository.Add(entity);
+        if(bookCreateResult.IsFailure)
+        {
+            return AppResult.Failure<Guid>(bookCreateResult.Error);
+        }
+
+        _repository.Add(bookCreateResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return AppResult.Success(entity.Id, $"New record has been added scuccessfly with Id = {entity.Id}");
+        return AppResult.Success(
+            bookCreateResult.Value.Id,
+            $"New record has been added scuccessfly with Id = {bookCreateResult.Value.Id}");
     }
 }

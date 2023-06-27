@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.ValueObjects;
 
 namespace Domain.Repositories;
 
@@ -21,6 +22,6 @@ public interface IBookRepository
     #endregion
 
     #region Business Methods
-    Task<bool> IsBookTitleExistAsync(string title, CancellationToken cancellationToken = default);
+    Task<bool> IsBookTitleExistAsync(BookTitle title, CancellationToken cancellationToken = default);
     #endregion
 }

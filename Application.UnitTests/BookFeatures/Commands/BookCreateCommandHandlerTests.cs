@@ -6,6 +6,7 @@ using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
+using Domain.ValueObjects;
 using FluentAssertions;
 using Moq;
 
@@ -30,7 +31,7 @@ public class BookCreateCommandHandlerTests
         // Setup
         _bookRepositoryMock.Setup(
             x => x.IsBookTitleExistAsync(
-                It.IsAny<string>(), 
+                It.IsAny<BookTitle>(), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
@@ -61,7 +62,7 @@ public class BookCreateCommandHandlerTests
         // Setup
         _bookRepositoryMock.Setup(
             x => x.IsBookTitleExistAsync(
-                It.IsAny<string>(),
+                It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
@@ -97,7 +98,7 @@ public class BookCreateCommandHandlerTests
         // Setup
         _bookRepositoryMock.Setup(
             x => x.IsBookTitleExistAsync(
-                It.IsAny<string>(),
+                It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
@@ -135,7 +136,7 @@ public class BookCreateCommandHandlerTests
         // Setup
         _bookRepositoryMock.Setup(
             x => x.IsBookTitleExistAsync(
-                It.IsAny<string>(),
+                It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 

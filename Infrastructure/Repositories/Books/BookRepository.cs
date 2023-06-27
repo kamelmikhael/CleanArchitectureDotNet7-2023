@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using Infrastructure.Contexts;
 using Infrastructure.Specifications;
 using Infrastructure.Specifications.Books;
@@ -51,9 +52,9 @@ public sealed class BookRepository : IBookRepository
 
     #region Business Methods
     public async Task<bool> IsBookTitleExistAsync(
-        string title,
+        BookTitle title,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Set<Book>().AnyAsync(x => x.Title.Value == title);
+        => await _dbContext.Set<Book>().AnyAsync(x => x.Title == title);
     #endregion
 
     private IQueryable<Book> ApplySpecification(Specification<Book> specification)

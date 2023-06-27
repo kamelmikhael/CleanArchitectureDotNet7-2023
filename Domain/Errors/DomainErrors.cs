@@ -21,8 +21,19 @@ public static class DomainErrors
 
     public static class Book
     {
-        public static AppError TitleIsAlreadyUsed = new(
+        public static readonly AppError TitleIsAlreadyUsed = new(
             $"{nameof(Book)}.{nameof(TitleIsAlreadyUsed)}",
             $"Title is already used with another book.");
+    }
+
+    public static class BookTitle
+    {
+        public static readonly AppError Empty = new AppError(
+                $"{nameof(BookTitle)}.Empty",
+                $"{nameof(BookTitle)} is empty");
+
+        public static readonly AppError MaxLength = new AppError(
+                $"{nameof(BookTitle)}.MaxLength",
+                $"{nameof(BookTitle)} must be less than or equal {MaxLength}");
     }
 }

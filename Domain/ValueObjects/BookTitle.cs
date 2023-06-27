@@ -1,4 +1,6 @@
 ﻿using Domain.Common;
+using Domain.Errors;
+using Domain.Exceptions;
 using Domain.Shared;
 
 namespace Domain.ValueObjects;
@@ -23,21 +25,21 @@ public sealed class BookTitle : ValueObject
 
     public static AppResult<BookTitle> Create(string value)
     {
-        if(string.IsNullOrWhiteSpace(value))
-            return AppResult.Failure<BookTitle>(new AppError(
-                $"{nameof(BookTitle)}.Empty",
-                $"{nameof(BookTitle)} is empty"));
+        #region Validation
+        if (string.IsNullOrWhiteSpace(value))
+            return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.Empty);
 
         if (value.Length > MaxLength)
-            return AppResult.Failure<BookTitle>(new AppError(
-                $"{nameof(BookTitle)}.MaxLength",
-                $"{nameof(BookTitle)} must be less than or equal {MaxLength}"));
+            return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.MaxLength);
+        #endregion
 
         return new BookTitle(value);
     }
 
-    //private static void Validate(string value)
-    //{
-    //    if (value.Length > MaxLength) throw new ArgumentException($"{nameof(value)} length is greater than {MaxLength}");
-    //}
+    private static void Validate(string value)
+    {
+        if (value.Length > MaxLength) 
+            throw new BookTitleExceedMaxLengthDomainException(
+                $"{nameof(value)} length is greater than {MaxLength}");
+    }
 }

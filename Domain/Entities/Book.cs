@@ -1,6 +1,8 @@
 ﻿using Domain.Common;
 using Domain.DomainEvents.Books;
 using Domain.Enums;
+using Domain.Errors;
+using Domain.Shared;
 using Domain.ValueObjects;
 
 namespace Domain.Entities;
@@ -16,7 +18,7 @@ public sealed class Book : FullAuditedEntity<Guid>
         
     }
 
-    public Book(Guid id, BookTitle title, string description, BookType type, DateOnly publishedOn)
+    private Book(Guid id, BookTitle title, string description, BookType type, DateOnly publishedOn)
     {
         Id = id;
         Title = title;
@@ -65,6 +67,26 @@ public sealed class Book : FullAuditedEntity<Guid>
     {
         // TODO: Validate translation here
         _translations.AddRange(translations);
+    }
+
+    public static AppResult<Book> Create(
+        Guid id,
+        BookTitle title,
+        string description,
+        BookType type,
+        DateOnly publishedOn,
+        bool isTitleAlreadyUsed)
+    {
+        // Validate here
+        if (isTitleAlreadyUsed)
+            return AppResult.Failure<Book>(DomainErrors.Book.TitleIsAlreadyUsed);
+
+        return new Book(
+            id,
+            title,
+            description,
+            type,
+            publishedOn);
     }
 }
 
