@@ -7,6 +7,8 @@ using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
+using Domain.ValueObjects;
+
 namespace Application.Features.BookFeatures.Commands;
 
 public sealed record BookCreateCommand(
@@ -34,12 +36,27 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
 
     public async Task<AppResult<Guid>> Handle(BookCreateCommand request, CancellationToken cancellationToken)
     {
-        if (await _repository.IsBookTitleExistAsync(request.Title))
+        //if (await _repository.IsBookTitleExistAsync(request.Title))
+        //{
+        //    return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
+        //}
+
+        //var entity = _mapper.Map<Book>(request);
+
+        AppResult<BookTitle> titleResult = BookTitle.Create(request.Title);
+
+        if (titleResult.IsFailure)
         {
-            return AppResult.Failure<Guid>(DomainErrors.Book.TitleIsAlreadyUsed);
+            // Log Error
+            return AppResult.Failure<Guid>(titleResult.Error);
         }
 
-        var entity = _mapper.Map<Book>(request);
+        var entity = new Book(
+            Guid.NewGuid(),
+            titleResult.Value,
+            request.Description,
+            request.Type,
+            request.PublishedOn);
 
         _repository.Add(entity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.ValueObjects;
 using Infrastructure.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,9 +15,14 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         builder.ToTable(TableNames.Books, SchemaNames.BK, t => t.IsTemporal());
 
+        //builder.Property(x => x.Title)
+        //    .HasMaxLength(Book.MaxTitleLength)
+        //    .IsRequired();
         builder.Property(x => x.Title)
-            .HasMaxLength(Book.MaxTitleLength)
-            .IsRequired();
+            .HasConversion(
+                bookTitle => bookTitle.Value,
+                dbValue => BookTitle.Create(dbValue).Value)
+            .HasMaxLength(BookTitle.MaxLength);
 
         builder.Property(x => x.Description)
             .HasMaxLength(Book.MaxDescriptionLength)

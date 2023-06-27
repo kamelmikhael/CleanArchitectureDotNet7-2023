@@ -5,6 +5,7 @@ using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,7 +36,15 @@ public sealed class BookUpdateCommandHandler : ICommandHandler<BookUpdateCommand
             return AppResult.Failure(DomainErrors.Record.NotFound(nameof(Book), request.Id));
         }
 
-        entity.SetTitle(request.Title);
+        AppResult<BookTitle> titleResult = BookTitle.Create(request.Title);
+
+        if(titleResult.IsFailure)
+        {
+            // Log Error
+            return titleResult;
+        }
+
+        entity.SetTitle(titleResult.Value);
         entity.SetDescription(request.Description);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

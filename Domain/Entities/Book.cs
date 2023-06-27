@@ -1,13 +1,13 @@
 ﻿using Domain.Common;
 using Domain.DomainEvents.Books;
 using Domain.Enums;
+using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
 //Rich domain model
 public sealed class Book : FullAuditedEntity<Guid>
 {
-    public const int MaxTitleLength = 50;
     public const int MaxDescriptionLength = 500;
     public const int MaxTypeLength = 50;
 
@@ -16,15 +16,16 @@ public sealed class Book : FullAuditedEntity<Guid>
         
     }
 
-    public Book(string title, string description, BookType type, DateOnly publishedOn)
+    public Book(Guid id, BookTitle title, string description, BookType type, DateOnly publishedOn)
     {
+        Id = id;
         Title = title;
         Description = description;
         Type = type;
         PublishedOn = publishedOn;
     }
 
-    public string Title { get; private set; }
+    public BookTitle Title { get; private set; }
 
     public string Description { get; private set; }
 
@@ -38,7 +39,7 @@ public sealed class Book : FullAuditedEntity<Guid>
     private readonly List<BookTranslation> _translations = new();
     public IReadOnlyCollection<BookTranslation>? Translations => _translations.AsReadOnly();
 
-    public void SetTitle(string title)
+    public void SetTitle(BookTitle title)
     {
         // TODO: Validate title here
         Title = title;
