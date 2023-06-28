@@ -41,14 +41,18 @@ public abstract class BaseEntity : BaseEntity<int>, IEquatable<BaseEntity>
     }
 }
 
-public abstract class BaseEntity<TPrimaryKey> : IBaseEntity<TPrimaryKey>
+public abstract class BaseEntity<TPrimaryKey> : IBaseEntity<TPrimaryKey>, IAggregateRoot
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
-
     /// <summary>
     /// Unique identifier for this entity.
     /// </summary>        
     public virtual TPrimaryKey Id { get; set; }
+
+    private readonly List<IDomainEvent> _domainEvents = new();
+
+    public IReadOnlyCollection<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
     protected void RaiseDomainEvent(IDomainEvent domainEvent)
     {

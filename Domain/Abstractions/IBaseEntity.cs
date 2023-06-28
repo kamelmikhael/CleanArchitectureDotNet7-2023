@@ -17,3 +17,10 @@ public interface IBaseEntity<TPrimaryKey>
     /// </summary>
     TPrimaryKey Id { get; set; }
 }
+
+public interface IAggregateRoot
+{
+    IReadOnlyCollection<IDomainEvent> GetDomainEvents();
+    void ClearDomainEvents();
+}
+

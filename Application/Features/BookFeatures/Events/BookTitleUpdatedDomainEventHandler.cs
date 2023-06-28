@@ -16,6 +16,6 @@ internal sealed class BookTitleUpdatedDomainEventHandler
 
     public async Task Handle(BookTitleUpdatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        await _emailService.SendAsync("Book Title Updated", "BookTitleUpdated", $"Book Title with Id = {notification.BookId} Updated successfully");
+        await _emailService.SendAsync("test@test.com", "Book Title Updated", $"Book Title with Id = {notification.BookId} Updated successfully");
     }
 }

@@ -46,7 +46,9 @@ public sealed class Book : FullAuditedEntity<Guid>
         // TODO: Validate title here
         Title = title;
 
-        RaiseDomainEvent(new BookTitleUpdatedDomainEvent(Id));
+        RaiseDomainEvent(new BookTitleUpdatedDomainEvent(
+            Guid.NewGuid(),
+            Id));
     }
 
     public void SetDescription(string description)
@@ -54,7 +56,9 @@ public sealed class Book : FullAuditedEntity<Guid>
         // TODO: Validate description here
         Description = description;
 
-        RaiseDomainEvent(new BookDescriptionUpdatedDomainEvent(Id));
+        RaiseDomainEvent(new BookDescriptionUpdatedDomainEvent(
+            Guid.NewGuid(),
+            Id));
     }
 
     public void AddTranslation(BookTranslation translation)
@@ -81,12 +85,18 @@ public sealed class Book : FullAuditedEntity<Guid>
         if (isTitleAlreadyUsed)
             return AppResult.Failure<Book>(DomainErrors.Book.TitleIsAlreadyUsed);
 
-        return new Book(
+        var book = new Book(
             id,
             title,
             description,
             type,
             publishedOn);
+
+        book.RaiseDomainEvent(new BookCreatedDomainEvent(
+            Guid.NewGuid(),
+            id));
+
+        return book;
     }
 }
 

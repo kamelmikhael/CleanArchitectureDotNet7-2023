@@ -2,4 +2,6 @@
 
 namespace Domain.DomainEvents.Books;
 
-public sealed record BookTitleUpdatedDomainEvent(Guid BookId) : IDomainEvent;
+public sealed record BookTitleUpdatedDomainEvent(
+    Guid Id,
+    Guid BookId) : DomainEvent(Id);

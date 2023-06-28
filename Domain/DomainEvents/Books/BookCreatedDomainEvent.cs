@@ -1,6 +1,5 @@
-﻿using Domain.Abstractions;
-using Domain.Entities;
+﻿namespace Domain.DomainEvents.Books;
 
-namespace Domain.DomainEvents.Books;
-
-public sealed record BookCreatedDomainEvent(Guid BookId) : IDomainEvent;
+public sealed record BookCreatedDomainEvent(
+    Guid Id,
+    Guid BookId) : DomainEvent(Id);
