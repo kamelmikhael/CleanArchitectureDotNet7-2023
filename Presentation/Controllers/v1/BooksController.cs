@@ -47,19 +47,19 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(nameof(Create))]
-    [ProducesResponseType(typeof(AppResult<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AppResult<Guid>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(
         BookCreateCommand input, CancellationToken cancellationToken)
     {
         var result = await Sender.Send(input, cancellationToken);
 
-        if(result.IsFailure)
-        {
-            return HandleFailure(result);
-        }
-
-        return Ok(result);
+        return result.IsFailure 
+            ? HandleFailure(result) 
+            : CreatedAtAction(
+                nameof(GetById),
+                new { id = result.Value },
+                result);
     }
 
     /// <summary>

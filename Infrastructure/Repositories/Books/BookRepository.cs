@@ -46,15 +46,18 @@ public sealed class BookRepository : IBookRepository
     public void Add(Book entity)
         => _dbContext.Set<Book>().Add(entity);
 
+    public void Update(Book entity)
+        => _dbContext.Set<Book>().Update(entity);
+
     public void Delete(Book entity)
         => _dbContext.Set<Book>().Remove(entity);
     #endregion
 
     #region Business Methods
-    public async Task<bool> IsBookTitleExistAsync(
+    public async Task<bool> IsBookTitleUniqueAsync(
         BookTitle title,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Set<Book>().AnyAsync(x => x.Title == title);
+        => !await _dbContext.Set<Book>().AnyAsync(x => x.Title == title, cancellationToken);
     #endregion
 
     private IQueryable<Book> ApplySpecification(Specification<Book> specification)

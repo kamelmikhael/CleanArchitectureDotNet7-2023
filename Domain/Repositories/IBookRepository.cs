@@ -18,10 +18,12 @@ public interface IBookRepository
     #region Write Methods
     void Add(Book entity);
 
+    void Update(Book entity);
+
     void Delete(Book entity);
     #endregion
 
     #region Business Methods
-    Task<bool> IsBookTitleExistAsync(BookTitle title, CancellationToken cancellationToken = default);
+    Task<bool> IsBookTitleUniqueAsync(BookTitle title, CancellationToken cancellationToken = default);
     #endregion
 }

@@ -30,7 +30,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleExistAsync(
+            x => x.IsBookTitleUniqueAsync(
                 It.IsAny<BookTitle>(), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -61,7 +61,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleExistAsync(
+            x => x.IsBookTitleUniqueAsync(
                 It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -97,7 +97,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleExistAsync(
+            x => x.IsBookTitleUniqueAsync(
                 It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -135,7 +135,7 @@ public class BookCreateCommandHandlerTests
     {
         // Setup
         _bookRepositoryMock.Setup(
-            x => x.IsBookTitleExistAsync(
+            x => x.IsBookTitleUniqueAsync(
                 It.IsAny<BookTitle>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);

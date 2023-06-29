@@ -47,6 +47,8 @@ public sealed class BookUpdateCommandHandler : ICommandHandler<BookUpdateCommand
         entity.SetTitle(titleResult.Value);
         entity.SetDescription(request.Description);
 
+        _repository.Update(entity);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return AppResult.Success(Unit.Value, $"Record with Id = [{entity.Id}] updated scuccessfly");

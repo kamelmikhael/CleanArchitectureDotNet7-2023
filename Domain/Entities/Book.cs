@@ -79,10 +79,10 @@ public sealed class Book : FullAuditedEntity<Guid>
         string description,
         BookType type,
         DateOnly publishedOn,
-        bool isTitleAlreadyUsed)
+        bool isTitleUnique)
     {
         // Validate here
-        if (isTitleAlreadyUsed)
+        if (!isTitleUnique)
             return AppResult.Failure<Book>(DomainErrors.Book.TitleIsAlreadyUsed);
 
         var book = new Book(

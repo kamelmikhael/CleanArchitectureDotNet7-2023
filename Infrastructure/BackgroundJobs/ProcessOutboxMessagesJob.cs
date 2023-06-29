@@ -48,8 +48,8 @@ public class ProcessOutboxMessagesJob : IJob
             AsyncRetryPolicy policy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(
-                3,
-                attempt => TimeSpan.FromMicroseconds(50 * attempt));
+                    3,
+                    attempt => TimeSpan.FromMicroseconds(50 * attempt));
 
             PolicyResult result = await policy.ExecuteAndCaptureAsync(() =>
                 _publisher.Publish(domainEvent, context.CancellationToken)

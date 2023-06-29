@@ -51,7 +51,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
             return AppResult.Failure<Guid>(titleResult.Error);
         }
 
-        var isTitleAlreadyUsed = await _repository.IsBookTitleExistAsync(titleResult.Value, cancellationToken);
+        var isTitleUnique = await _repository.IsBookTitleUniqueAsync(titleResult.Value, cancellationToken);
 
         var bookCreateResult = Book.Create(
             Guid.NewGuid(),
@@ -59,7 +59,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
             request.Description,
             request.Type,
             request.PublishedOn,
-            isTitleAlreadyUsed);
+            isTitleUnique);
 
         if(bookCreateResult.IsFailure)
         {
