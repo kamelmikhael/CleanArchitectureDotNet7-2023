@@ -53,7 +53,7 @@ public class BookCreateCommandHandlerTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(DomainErrors.Book.TitleIsAlreadyUsed);
+        result.Error.Should().Be(DomainErrors.Book.TitleAlreadyInUse);
     }
 
     [Fact]
@@ -66,10 +66,16 @@ public class BookCreateCommandHandlerTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        //_mapperMock.Setup(
-        //    x => x.Map<Book>(
-        //        It.IsAny<BookCreateCommand>()))
-        //    .Returns(new Book { Id = Guid.NewGuid() });
+        _mapperMock.Setup(
+            x => x.Map<Book>(
+                It.IsAny<BookCreateCommand>()))
+            .Returns(Book.Create(
+                Guid.NewGuid(),
+                BookTitle.Create("Title").Value,
+                "Description",
+                BookType.Story,
+                DateOnly.FromDateTime(DateTime.UtcNow),
+                true).Value);
 
         // Arrange
         var command = new BookCreateCommand(
@@ -102,10 +108,16 @@ public class BookCreateCommandHandlerTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        //_mapperMock.Setup(
-        //    x => x.Map<Book>(
-        //        It.IsAny<BookCreateCommand>()))
-        //    .Returns(new Book { Id = Guid.NewGuid() });
+        _mapperMock.Setup(
+            x => x.Map<Book>(
+                It.IsAny<BookCreateCommand>()))
+            .Returns(Book.Create(
+                Guid.NewGuid(),
+                BookTitle.Create("Title").Value,
+                "Description",
+                BookType.Story,
+                DateOnly.FromDateTime(DateTime.UtcNow),
+                true).Value);
 
         // Arrange
         var command = new BookCreateCommand(

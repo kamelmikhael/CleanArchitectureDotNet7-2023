@@ -83,7 +83,7 @@ public sealed class Book : FullAuditedEntity<Guid>
     {
         // Validate here
         if (!isTitleUnique)
-            return AppResult.Failure<Book>(DomainErrors.Book.TitleIsAlreadyUsed);
+            return AppResult.Failure<Book>(DomainErrors.Book.TitleAlreadyInUse);
 
         var book = new Book(
             id,

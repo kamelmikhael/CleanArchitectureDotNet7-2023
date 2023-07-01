@@ -21,8 +21,8 @@ public static class DomainErrors
 
     public static class Book
     {
-        public static readonly AppError TitleIsAlreadyUsed = new(
-            $"{nameof(Book)}.{nameof(TitleIsAlreadyUsed)}",
+        public static readonly AppError TitleAlreadyInUse = new(
+            $"{nameof(Book)}.{nameof(TitleAlreadyInUse)}",
             $"Title is already used with another book.");
     }
 
