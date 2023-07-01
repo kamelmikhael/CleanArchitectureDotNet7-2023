@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Specifications;
 
-public static class SpecificationEvaluator
+internal static class SpecificationEvaluator
 {
-    public static IQueryable<TEntity> GetQuery<TEntity>(
+    public static IQueryable<TEntity> GetQuery<TEntity, TKey>(
         IQueryable<TEntity> inputQueryable,
-        Specification<TEntity> specification)
-        where TEntity : class
+        Specification<TEntity, TKey> specification)
+        where TEntity : BaseEntity<TKey>
     {
         IQueryable<TEntity> queryable = inputQueryable;
 

@@ -60,6 +60,6 @@ public sealed class BookRepository : IBookRepository
         => !await _dbContext.Set<Book>().AnyAsync(x => x.Title == title, cancellationToken);
     #endregion
 
-    private IQueryable<Book> ApplySpecification(Specification<Book> specification)
+    private IQueryable<Book> ApplySpecification(Specification<Book, Guid> specification)
         => SpecificationEvaluator.GetQuery(_dbContext.Set<Book>(), specification);
 }

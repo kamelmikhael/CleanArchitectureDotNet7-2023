@@ -1,40 +1,41 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Common;
+using System.Linq.Expressions;
 
 namespace Domain.Repositories;
 
-public interface IRepository<T> 
-    where T : class
+public interface IRepository<TEntity, TKey> 
+    where TEntity : BaseEntity<TKey>
 {
-    Task<IEnumerable<T>> GetWithPaginationAsync(
-        Expression<Func<T, bool>> predicate,
+    Task<IEnumerable<TEntity>> GetWithPaginationAsync(
+        Expression<Func<TEntity, bool>> predicate,
         int pageIndex = 0,
         int pageSize = 10);
 
     Task<int> CountAsync();
 
-    Task<T> FindAsync(object id, CancellationToken cancellationToken = default);
+    Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default);
 
-    Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken = default);
+    Task<TEntity> FirstOrDefaultAsync(CancellationToken cancellationToken = default);
 
-    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<T>> ToListAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> ToListAsync(CancellationToken cancellationToken = default);
 
-    IEnumerable<T> Where(Expression<Func<T, bool>> expression);
+    IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> expression);
 
-    void Add(T entity);
+    void Add(TEntity entity);
 
-    void AddRange(IEnumerable<T> entities);
+    void AddRange(IEnumerable<TEntity> entities);
 
-    void Remove(T entity);
+    void Remove(TEntity entity);
 
-    void RemoveRange(IEnumerable<T> entities);
+    void RemoveRange(IEnumerable<TEntity> entities);
 
-    void Update(T entity);
+    void Update(TEntity entity);
 
-    void UpdateRange(IEnumerable<T> entities);
+    void UpdateRange(IEnumerable<TEntity> entities);
 
-    IQueryable<T> AsNoTracking();
+    IQueryable<TEntity> AsNoTracking();
 
-    IQueryable<T> AsQueryable();
+    IQueryable<TEntity> AsQueryable();
 }

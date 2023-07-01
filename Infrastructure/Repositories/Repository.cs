@@ -5,23 +5,25 @@ using System.Linq.Expressions;
 using Infrastructure.Specifications;
 using AutoMapper;
 using Application.Extensions;
+using Domain.Common;
 
 namespace Infrastructure.Repositories;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> 
+    where TEntity : BaseEntity<TKey>
 {
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
 
     #region Constructors
     public Repository(ApplicationDbContext context)
     {
-        _dbSet = context.Set<T>();
+        _dbSet = context.Set<TEntity>();
     }
     #endregion
 
     #region Methods
-    public async Task<IEnumerable<T>> GetWithPaginationAsync(
-        Expression<Func<T, bool>> predicate,
+    public async Task<IEnumerable<TEntity>> GetWithPaginationAsync(
+        Expression<Func<TEntity, bool>> predicate,
         int pageIndex = 0,
         int pageSize = 10)
         => await _dbSet.Where(predicate)
@@ -29,38 +31,38 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task<int> CountAsync() => await _dbSet.CountAsync();
 
-    public async Task<IEnumerable<T>> ToListAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> ToListAsync(CancellationToken cancellationToken = default)
         => await _dbSet.ToListAsync(cancellationToken);
 
-    public async Task<T> FindAsync(object id, CancellationToken cancellationToken = default)
+    public async Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         => await _dbSet.FindAsync(id, cancellationToken);
 
-    public async Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    public async Task<TEntity> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
         => await _dbSet.FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
 
-    public IEnumerable<T> Where(Expression<Func<T, bool>> expression)
+    public IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> expression)
         => _dbSet.Where(expression);
 
-    public void Add(T entity) => _dbSet.Add(entity);
+    public void Add(TEntity entity) => _dbSet.Add(entity);
 
-    public void AddRange(IEnumerable<T> entities) => _dbSet.AddRange(entities);
+    public void AddRange(IEnumerable<TEntity> entities) => _dbSet.AddRange(entities);
 
-    public void Remove(T entity) => _dbSet.Remove(entity);
+    public void Remove(TEntity entity) => _dbSet.Remove(entity);
 
-    public void RemoveRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
+    public void RemoveRange(IEnumerable<TEntity> entities) => _dbSet.RemoveRange(entities);
 
-    public void Update(T entity) => _dbSet.Update(entity);
+    public void Update(TEntity entity) => _dbSet.Update(entity);
 
-    public void UpdateRange(IEnumerable<T> entities) => _dbSet.UpdateRange(entities);
+    public void UpdateRange(IEnumerable<TEntity> entities) => _dbSet.UpdateRange(entities);
 
-    public IQueryable<T> AsNoTracking() => _dbSet.AsNoTracking();
+    public IQueryable<TEntity> AsNoTracking() => _dbSet.AsNoTracking();
 
-    public IQueryable<T> AsQueryable() => _dbSet.AsQueryable();
+    public IQueryable<TEntity> AsQueryable() => _dbSet.AsQueryable();
 
-    public IQueryable<T> ApplySpecification(Specification<T> specification)
+    public IQueryable<TEntity> ApplySpecification(Specification<TEntity, TKey> specification)
         => SpecificationEvaluator.GetQuery(_dbSet, specification);
     #endregion
 }

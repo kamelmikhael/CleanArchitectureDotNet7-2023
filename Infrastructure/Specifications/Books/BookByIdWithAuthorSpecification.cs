@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Specifications.Books;
 
-public class BookByIdWithAuthorSpecification : Specification<Book>
+public class BookByIdWithAuthorSpecification : Specification<Book, Guid>
 {
     public BookByIdWithAuthorSpecification(Guid bookId) 
         : base(book => book.Id == bookId)

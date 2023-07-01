@@ -1,9 +1,10 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Common;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Specifications;
 
-public abstract class Specification<TEntity>
-    where TEntity : class
+public abstract class Specification<TEntity, TKey>
+    where TEntity : BaseEntity<TKey>
 {
     protected Specification(Expression<Func<TEntity, bool>>? criteria)
         => Criteria = criteria;
@@ -16,12 +17,12 @@ public abstract class Specification<TEntity>
 
     public Expression<Func<TEntity, object>>? OrderByDescendingExpression { get; private set; }
 
-    public bool IsSplitQuery { get; protected set; }
-    public bool IsNoTracking { get; protected set; }
+    public bool IsSplitQuery { get; private set; }
+    public bool IsNoTracking { get; private set; }
 
-    public bool IsPagedResult { get; protected set; }
-    public int PageIndex { get; protected set; } = 0;
-    public int PageSize { get; protected set; } = 10;
+    public bool IsPagedResult { get; private set; }
+    public int PageIndex { get; private set; } = 0;
+    public int PageSize { get; private set; } = 10;
 
     protected void AddInclude(Expression<Func<TEntity, object>> includeExpression) 
         => IncludeExpressions.Add(includeExpression);
@@ -31,4 +32,13 @@ public abstract class Specification<TEntity>
 
     protected void AddOrderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
         => OrderByDescendingExpression = orderByDescendingExpression;
+
+    protected void WithPaging(int pageIndex, int pageSize)
+        => (IsPagedResult, PageIndex, PageSize) = (true, pageIndex, pageSize);
+
+    protected void AsNoTracking() 
+        => IsNoTracking = true;
+
+    protected void AsSplitQuery() 
+        => IsSplitQuery = true;
 }
