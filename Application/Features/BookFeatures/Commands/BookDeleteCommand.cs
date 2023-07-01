@@ -1,12 +1,10 @@
 ﻿using Application.Abstractions.Messaging;
-using Application.Features.BookFeatures.Dtos;
 using Domain.Entities;
 using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.UnitOfWorks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.BookFeatures.Commands;
 

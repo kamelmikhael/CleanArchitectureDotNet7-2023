@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿
 namespace Application.Common;
 
 public class PagedResponseDto<T>
@@ -82,23 +81,23 @@ public class PagedResponseDto<T>
     /// page</param>
     /// <returns>
     /// A object containing the paged result
-    public static async Task<PagedResponseDto<T>> CreateAsync(
-        IQueryable<T> source,
-        int pageIndex,
-        int pageSize)
-    {
-        var count = await source.CountAsync();
+    //public static async Task<PagedResponseDto<T>> CreateAsync(
+    //    IQueryable<T> source,
+    //    int pageIndex,
+    //    int pageSize)
+    //{
+    //    var count = await source.CountAsync();
 
-        source = source.Skip(pageIndex * pageSize).Take(pageSize);
+    //    source = source.Skip(pageIndex * pageSize).Take(pageSize);
 
-        var data = await source.ToListAsync();
+    //    var data = await source.ToListAsync();
 
-        return new PagedResponseDto<T>(
-            data,
-            count,
-            pageIndex,
-            pageSize);
-    }
+    //    return new PagedResponseDto<T>(
+    //        data,
+    //        count,
+    //        pageIndex,
+    //        pageSize);
+    //}
 
     public static PagedResponseDto<T> Create(
         List<T> data,

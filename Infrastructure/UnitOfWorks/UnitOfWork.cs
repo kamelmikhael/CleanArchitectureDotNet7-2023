@@ -8,6 +8,9 @@ using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Polly;
+using Infrastructure.Outbox;
+using Newtonsoft.Json;
 
 namespace Infrastructure.UnitOfWorks;
 
@@ -26,12 +29,47 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
     {
         OnBeforeSaveChanges();
 
-        SetAuditProperties();
-
         return await _context.SaveChangesAsync(cancellationToken);
     }
 
     private void OnBeforeSaveChanges()
+    {
+        UpdateAuditLogTable();
+
+        ConvertDomainEventsToOutboxMessages();
+
+        SetAuditProperties();
+    }
+
+    private void ConvertDomainEventsToOutboxMessages()
+    {
+        var outboxMessages = _context.ChangeTracker
+            .Entries<IAggregateRoot>()
+            .Select(x => x.Entity)
+            .SelectMany(aggregateRoot =>
+            {
+                var domainEvents = aggregateRoot.GetDomainEvents();
+                aggregateRoot.ClearDomainEvents();
+                return domainEvents;
+            })
+            .Select(domainEvent => new OutboxMessage
+            {
+                Id = Guid.NewGuid(),
+                OccurredOnUtc = DateTime.UtcNow,
+                Type = domainEvent.GetType().Name,
+                Content = JsonConvert.SerializeObject(
+                    domainEvent,
+                    new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All,
+                    }),
+            })
+            .ToList();
+
+        _context.Set<OutboxMessage>().AddRange(outboxMessages);
+    }
+
+    private void UpdateAuditLogTable()
     {
         _context.ChangeTracker.DetectChanges();
 
@@ -86,7 +124,7 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
 
         foreach (var auditEntry in auditEntries)
         {
-            _context.AuditLogs.Add(auditEntry.ToAudit());
+            _context.Set<AuditLog>().Add(auditEntry.ToAudit());
         }
     }
 
@@ -94,84 +132,59 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
     {
         var utcNow = DateTime.UtcNow;
         string? userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         Guid? currentLoggedUserId = userId is null ? null : Guid.Parse(userId);
 
-        HandleCreationAuditedEntities(utcNow, currentLoggedUserId);
-        HandleModificationAuditedEntities(utcNow, currentLoggedUserId);
-        HandleDeletionAuditedEntities(utcNow, currentLoggedUserId);
+        SetCreationAuditedEntities(utcNow, currentLoggedUserId);
+        SetModificationAuditedEntities(utcNow, currentLoggedUserId);
+        SetDeletionAuditedEntities(utcNow, currentLoggedUserId);
     }
 
-    private void HandleCreationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
+    private void SetCreationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        _context.ChangeTracker.DetectChanges();
-        IEnumerable<EntityEntry> entities = _context.ChangeTracker
-                .Entries()
-                .Where(t => t.Entity is ICreationAudited && t.State == EntityState.Added);
+        var creationAuditedEntries = _context.ChangeTracker
+            .Entries<ICreationAudited>()
+            .Where(e => e.State == EntityState.Added)
+            .Select(entry =>
+            {
+                entry.Property(p => p.CreationTime).CurrentValue = utcNow;
+                entry.Property(p => p.CreatorUserId).CurrentValue = currentLoggedUserId;
 
-        foreach (EntityEntry entry in entities)
-        {
-            UpdateCreatedEntry(utcNow, entry, currentLoggedUserId);
-        }
+                return entry;
+            })
+            .ToList();
     }
 
-    private void HandleModificationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
+    private void SetModificationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        _context.ChangeTracker.DetectChanges();
-        IEnumerable<EntityEntry> entities = _context.ChangeTracker
-                .Entries()
-                .Where(t => t.Entity is IModificationAudited && t.State == EntityState.Modified);
+        var modificationAuditedEntries = _context.ChangeTracker
+            .Entries<IModificationAudited>()
+            .Where(e => e.State == EntityState.Modified)
+            .Select(entry =>
+            {
+                entry.Property(p => p.LastModificationTime).CurrentValue = utcNow;
+                entry.Property(p => p.LastModifierUserId).CurrentValue = currentLoggedUserId;
 
-        foreach (EntityEntry entry in entities)
-        {
-            UpdateModifiedEntry(utcNow, entry, currentLoggedUserId);
-        }
+                return entry;
+            })
+            .ToList();
     }
 
-    private void HandleDeletionAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
+    private void SetDeletionAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        _context.ChangeTracker.DetectChanges();
-        IEnumerable<EntityEntry> entities = _context.ChangeTracker
-                .Entries()
-                .Where(t => t.Entity is IDeletionAudited && t.State == EntityState.Deleted);
+        var deletionAuditedEntries = _context.ChangeTracker
+            .Entries<IDeletionAudited>()
+            .Where(e => e.State == EntityState.Deleted)
+            .Select(entry =>
+            {
+                entry.Property(p => p.DeletionTime).CurrentValue = utcNow;
+                entry.Property(p => p.DeleterUserId).CurrentValue = currentLoggedUserId;
+                entry.Property(p => p.IsDeleted).CurrentValue = true;
 
-        foreach (EntityEntry entry in entities)
-        {
-            UpdateDeletedEntry(utcNow, entry, currentLoggedUserId);
+                entry.State = EntityState.Modified;
 
-            entry.State = EntityState.Modified;
-        }
-    }
-
-    private static void UpdateCreatedEntry(DateTime utcNow, EntityEntry entry, Guid? currentLoggedUserId)
-    {
-        ICreationAudited createdAuditEntity = (ICreationAudited)entry.Entity;
-        if (createdAuditEntity is not null)
-        {
-            createdAuditEntity.CreationTime = utcNow;
-            createdAuditEntity.CreatorUserId = currentLoggedUserId;
-        }
-    }
-
-    private static void UpdateDeletedEntry(DateTime utcNow, EntityEntry entry, Guid? currentLoggedUserId)
-    {
-        IDeletionAudited deleteAuditEntity = (IDeletionAudited)entry.Entity;
-        if (deleteAuditEntity is not null)
-        {
-            deleteAuditEntity.DeletionTime = utcNow;
-            deleteAuditEntity.IsDeleted = true;
-            deleteAuditEntity.DeleterUserId = currentLoggedUserId;
-        }
-    }
-
-    private static void UpdateModifiedEntry(DateTime utcNow, EntityEntry entry, Guid? currentLoggedUserId)
-    {
-        IModificationAudited modifiedAuditEntity = (IModificationAudited)entry.Entity;
-        if (modifiedAuditEntity is not null)
-        {
-            modifiedAuditEntity.LastModificationTime = utcNow;
-            modifiedAuditEntity.LastModifierUserId = currentLoggedUserId;
-        }
+                return entry;
+            })
+            .ToList();
     }
 
     public void Dispose() => _context.Dispose();

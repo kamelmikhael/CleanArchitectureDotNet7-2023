@@ -1,12 +1,10 @@
 ﻿using Application.Abstractions.Messaging;
 using Application.Features.BookFeatures.Dtos;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.BookFeatures.Queries;
 

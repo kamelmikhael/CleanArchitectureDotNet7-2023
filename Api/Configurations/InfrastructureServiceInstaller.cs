@@ -23,17 +23,19 @@ public class InfrastructureServiceInstaller : IServiceInstaller
 
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
-        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        //services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        //services.AddSingleton<AuditingInterceptor>();
 
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
-            var outboxMessagesInterceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            //var outboxMessagesInterceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            //var auditingInterceptor = sp.GetService<AuditingInterceptor>();
 
             options
                 .UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                .AddInterceptors(outboxMessagesInterceptor);
+                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+                //.AddInterceptors(outboxMessagesInterceptor);
         });
 
         services.AddQuartz(configure =>

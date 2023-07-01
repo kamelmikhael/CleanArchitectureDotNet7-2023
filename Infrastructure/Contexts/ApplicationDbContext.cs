@@ -13,12 +13,6 @@ public class ApplicationDbContext : DbContext
         : base(options) { }
     #endregion
 
-    #region DbSets
-    public virtual DbSet<AuditLog> AuditLogs { get; set; }
-    public virtual DbSet<OutboxMessage> OutboxMessages { get; set; }
-    public virtual DbSet<OutboxMessageConsumer> OutboxMessageConsumers { get; set; }
-    #endregion
-
     #region Methods
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
