@@ -1,11 +1,10 @@
-﻿using Azure;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects;
+using Infrastructure.Resolvers;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
-using System.Text.Json;
-using System.Threading;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Repositories.Books;
 
@@ -55,28 +54,39 @@ public class CachedBookRepository : IBookRepository
                 return await _decorated.GetByIdAsync(id, cancellationToken);
             });
 
-        //string? cahchedBook = await _distributedCache.GetStringAsync(key, cancellationToken);
+        // return await GetDistributedCachedBook(id, key, cancellationToken);
+    }
 
-        //Book? book;
+    private async Task<Book?> GetDistributedCachedBook(Guid id, string key, CancellationToken cancellationToken)
+    {
+        string? cahchedBook = await _distributedCache.GetStringAsync(key, cancellationToken);
 
-        //if (string.IsNullOrEmpty(cahchedBook))
-        //{
-        //    book = await _decorated.GetByIdAsync(id, cancellationToken);
+        Book? book;
 
-        //    if (book is not null)
-        //    {
-        //        await _distributedCache.SetStringAsync(
-        //        key,
-        //        JsonSerializer.Serialize(book),
-        //        cancellationToken);
-        //    }
+        if (string.IsNullOrEmpty(cahchedBook))
+        {
+            book = await _decorated.GetByIdAsync(id, cancellationToken);
 
-        //    return book;
-        //}
+            if (book is not null)
+            {
+                await _distributedCache.SetStringAsync(
+                key,
+                JsonConvert.SerializeObject(book),
+                cancellationToken);
+            }
 
-        //book = JsonSerializer.Deserialize<Book>(cahchedBook);
+            return book;
+        }
 
-        //return book;
+        book = JsonConvert.DeserializeObject<Book>(
+            cahchedBook,
+            new JsonSerializerSettings
+            {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                ContractResolver = new PrivateResolver(),
+            });
+
+        return book;
     }
 
     public async Task<bool> IsBookTitleUniqueAsync(BookTitle title, CancellationToken cancellationToken = default)
