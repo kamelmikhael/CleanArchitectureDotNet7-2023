@@ -23,6 +23,8 @@ public sealed class BookTitle : ValueObject
         yield return Value;
     }
 
+    public static explicit operator string(BookTitle bookTitle) => bookTitle.Value;
+
     public static AppResult<BookTitle> Create(string value)
     {
         #region Validation

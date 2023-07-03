@@ -39,7 +39,11 @@ public class CachedBookRepository : IBookRepository
     public async Task<IEnumerable<Book>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _decorated.GetAllAsync(cancellationToken);
 
-    public async Task<IEnumerable<Book>> GetAllWithPagingAsync(string keyword, int page, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<Book>, int)> GetAllWithPagingAsync(
+        string keyword, 
+        int page, 
+        int pageSize, 
+        CancellationToken cancellationToken = default)
         => await _decorated.GetAllWithPagingAsync(keyword, page, pageSize, cancellationToken);
 
     public async Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

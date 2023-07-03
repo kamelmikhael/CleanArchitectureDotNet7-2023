@@ -24,14 +24,12 @@ internal sealed class BookGetAllWithPaginationQueryHandler : IQueryHandler<BookG
         BookGetAllWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var books = await _repository
+        (IEnumerable<Domain.Entities.Book> books, int count) = await _repository
                 .GetAllWithPagingAsync(
                     request.PaginationParams.Keyword ?? "",
                     request.PaginationParams.PageIndex, 
                     request.PaginationParams.PageSize,
                     cancellationToken);
-
-        var count = await _repository.CountAsync(cancellationToken);
 
         var result = PagedResponseDto<BookDto>.Create(
             _mapper.Map<List<BookDto>>(books),

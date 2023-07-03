@@ -23,13 +23,15 @@ public sealed class BookRepository : IBookRepository
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-    public async Task<IEnumerable<Book>> GetAllWithPagingAsync(
+    public async Task<(IEnumerable<Book>, int)> GetAllWithPagingAsync(
         string keyword,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
-        => await ApplySpecification(new BookGetAllWithPaginationSpecification(keyword, page, pageSize))
-            .ToListAsync(cancellationToken);
+        => (
+            await ApplySpecification(new BookGetAllWithPaginationSpecification(keyword, page, pageSize)).ToListAsync(cancellationToken),
+            await ApplySpecification(new BookGetAllWithPaginationSpecification(keyword, 0, int.MaxValue)).CountAsync(cancellationToken)
+        );
 
     public async Task<Book?> GetByIdAsync(
         Guid id,
