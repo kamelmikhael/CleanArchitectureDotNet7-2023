@@ -8,15 +8,15 @@ public class PagedResponseDto<T>
     /// </summary>
     internal PagedResponseDto(
         List<T> data,
-        int count,
+        int totalCount,
         int pageIndex,
         int pageSize)
     {
         Data = data;
         PageIndex = pageIndex;
         PageSize = pageSize;
-        TotalCount = count;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        TotalCount = totalCount;
+        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
     }
 
     #region Properties
@@ -101,12 +101,12 @@ public class PagedResponseDto<T>
 
     public static PagedResponseDto<T> Create(
         List<T> data,
-        int count,
+        int totalCount,
         int pageIndex,
         int pageSize)
         => new PagedResponseDto<T>(
             data,
-            count,
+            totalCount,
             pageIndex,
             pageSize);
     #endregion
