@@ -10,5 +10,5 @@ namespace Domain.Common;
 public abstract class AggregateRoot : AggregateRoot<int>
 { }
 
-public abstract class AggregateRoot<TPrimaryKey> : BaseEntity<TPrimaryKey>
+public abstract class AggregateRoot<TPrimaryKey> : Entity<TPrimaryKey>
 { }

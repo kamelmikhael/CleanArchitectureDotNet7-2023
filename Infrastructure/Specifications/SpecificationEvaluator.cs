@@ -8,7 +8,7 @@ internal static class SpecificationEvaluator
     public static IQueryable<TEntity> GetQuery<TEntity, TKey>(
         IQueryable<TEntity> inputQueryable,
         Specification<TEntity, TKey> specification)
-        where TEntity : BaseEntity<TKey>
+        where TEntity : Entity<TKey>
     {
         IQueryable<TEntity> queryable = inputQueryable;
 

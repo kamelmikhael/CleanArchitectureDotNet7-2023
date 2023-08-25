@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace Domain.Repositories;
 
 public interface IRepository<TEntity, TKey> 
-    where TEntity : BaseEntity<TKey>
+    where TEntity : Entity<TKey>
 {
     Task<IEnumerable<TEntity>> GetWithPaginationAsync(
         Expression<Func<TEntity, bool>> predicate,

@@ -11,7 +11,7 @@ namespace Domain.Common;
 //   TPrimaryKey:
 //     Type of the primary key of the entity
 [Serializable]
-public abstract class CreationAuditedEntity<TPrimaryKey> : BaseEntity<TPrimaryKey>, ICreationAudited
+public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, ICreationAudited
 {
     //
     // Summary:

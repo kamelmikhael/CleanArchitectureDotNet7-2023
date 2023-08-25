@@ -33,6 +33,8 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(nameof(GetById) + "/{id:guid}")]
+    [ProducesResponseType(typeof(AppResult<BookDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<AppResult<BookDto>> GetById(
         Guid id, 
         CancellationToken cancellationToken)

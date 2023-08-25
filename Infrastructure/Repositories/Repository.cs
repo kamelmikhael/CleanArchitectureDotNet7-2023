@@ -10,7 +10,7 @@ using Domain.Common;
 namespace Infrastructure.Repositories;
 
 public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> 
-    where TEntity : BaseEntity<TKey>
+    where TEntity : Entity<TKey>
 {
     protected readonly DbSet<TEntity> _dbSet;
 

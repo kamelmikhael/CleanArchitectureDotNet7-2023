@@ -2,15 +2,15 @@
 
 namespace Domain.Common;
 
-public abstract class BaseEntity : BaseEntity<int>, IEquatable<BaseEntity>
+public abstract class Entity : Entity<int>, IEquatable<Entity>
 {
-    public static bool operator ==(BaseEntity? first, BaseEntity? second)
+    public static bool operator ==(Entity? first, Entity? second)
         => first is not null && second is not null && first.Equals(second);
 
-    public static bool operator !=(BaseEntity? first, BaseEntity? second)
+    public static bool operator !=(Entity? first, Entity? second)
         => !(first == second);
 
-    public bool Equals(BaseEntity? other)
+    public bool Equals(Entity? other)
     {
         if (other is null)
             return false;
@@ -23,25 +23,20 @@ public abstract class BaseEntity : BaseEntity<int>, IEquatable<BaseEntity>
 
     public override bool Equals(object? obj)
     {
-        if (obj is null)
-            return false;
+        if (obj is null) return false;
 
-        if (obj.GetType() != GetType())
-            return false;
+        if (obj.GetType() != GetType()) return false;
 
-        if (obj is not BaseEntity entity)
-            return false;
+        if (obj is not Entity entity) return false;
 
         return entity.Id == Id;
     }
 
     public override int GetHashCode()
-    {
-        return Id.GetHashCode() * 41;
-    }
+        => Id.GetHashCode() * 41;
 }
 
-public abstract class BaseEntity<TPrimaryKey> : IBaseEntity<TPrimaryKey>, IAggregateRoot
+public abstract class Entity<TPrimaryKey> : IBaseEntity<TPrimaryKey>, IAggregateRoot
 {
     /// <summary>
     /// Unique identifier for this entity.

@@ -54,6 +54,10 @@ public partial class BookConfiguration : IEntityTypeConfiguration<Book>
                 dbValue => Enum.Parse<BookType>(dbValue))
             .HasMaxLength(Book.MaxTypeLength);
 
+        builder.HasOne<Author>()
+            .WithMany()
+            .HasForeignKey(x => x.AuthorId);
+
         builder.HasQueryFilter(x => x.IsDeleted == false);
 
         OnConfigurePartial(builder);

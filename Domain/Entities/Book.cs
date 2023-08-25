@@ -10,13 +10,12 @@ namespace Domain.Entities;
 //Rich domain model
 public sealed class Book : FullAuditedEntity<Guid>
 {
+    private readonly List<BookTranslation> _translations = new();
+
     public const int MaxDescriptionLength = 500;
     public const int MaxTypeLength = 50;
 
-    protected Book()
-    {
-        
-    }
+    protected Book() { }
 
     private Book(Guid id, BookTitle title, string description, BookType type, DateOnly publishedOn)
     {
@@ -37,8 +36,8 @@ public sealed class Book : FullAuditedEntity<Guid>
 
     public TimeOnly? PublishedTime { get; private set; }
 
+    public int AuthorId { get; set; }
 
-    private readonly List<BookTranslation> _translations = new();
     public IReadOnlyCollection<BookTranslation>? Translations => _translations.AsReadOnly();
 
     public void SetTitle(BookTitle title)

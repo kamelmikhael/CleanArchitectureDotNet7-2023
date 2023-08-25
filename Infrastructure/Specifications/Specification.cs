@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace Infrastructure.Specifications;
 
 public abstract class Specification<TEntity> : Specification<TEntity, int>
-    where TEntity : BaseEntity<int>
+    where TEntity : Entity<int>
 {
     protected Specification(Expression<Func<TEntity, bool>>? criteria) 
         : base(criteria)
@@ -12,7 +12,7 @@ public abstract class Specification<TEntity> : Specification<TEntity, int>
 }
 
 public abstract class Specification<TEntity, TKey>
-    where TEntity : BaseEntity<TKey>
+    where TEntity : Entity<TKey>
 {
     protected Specification(Expression<Func<TEntity, bool>>? criteria)
         => Criteria = criteria;

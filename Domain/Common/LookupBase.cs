@@ -5,7 +5,7 @@ public class LookupBase : LookupBase<int>
     public static implicit operator int(LookupBase lookup) => lookup.Id;
 }
 
-public class LookupBase<TKey> : BaseEntity<TKey>
+public class LookupBase<TKey> : Entity<TKey>
 {
     public string Name { get; set; }
     public string NameAr { get; set; }
