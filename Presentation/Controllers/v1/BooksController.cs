@@ -35,12 +35,16 @@ public class BooksController : BaseApiController
     [HttpGet(nameof(GetById) + "/{id:guid}")]
     [ProducesResponseType(typeof(AppResult<BookDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<AppResult<BookDto>> GetById(
+    public async Task<IActionResult> GetById(
         Guid id, 
         CancellationToken cancellationToken)
-        => await Sender.Send(
+    {
+        var response = await Sender.Send(
             new BookGetByIdQuery(id), cancellationToken
         );
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
 
     /// <summary>
     /// Create new Record

@@ -56,6 +56,8 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
             return AppResult.Failure<Guid>(bookCreateResult.Error);
         }
 
+        bookCreateResult.Value.AuthorId = 1;
+
         _repository.Add(bookCreateResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

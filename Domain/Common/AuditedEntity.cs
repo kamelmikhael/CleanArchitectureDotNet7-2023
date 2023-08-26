@@ -7,7 +7,7 @@ namespace Domain.Common;
 //     A shortcut of Abp.Domain.Entities.Auditing.AuditedEntity`1 for most used primary
 //     key type (System.Int32).
 [Serializable]
-public abstract class AuditedEntity : AuditedEntity<int>, IBaseEntity, IBaseEntity<int>
+public abstract class AuditedEntity : AuditedEntity<int>, IBaseEntity, IEntity<int>
 { }
 
 //

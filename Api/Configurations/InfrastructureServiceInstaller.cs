@@ -26,7 +26,7 @@ public class InfrastructureServiceInstaller : IServiceInstaller
 
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
-        //services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         //services.AddSingleton<AuditingInterceptor>();
 
         services.ConfigureOptions<DatabaseOptionsSetup>();
@@ -34,7 +34,7 @@ public class InfrastructureServiceInstaller : IServiceInstaller
         services.AddDbContext<ApplicationDbContext>((serviceProvider, dbContextOptionsBuilder) =>
         {
             var databaseOptions = serviceProvider.GetService<IOptions<DatabaseOptions>>()!.Value;
-            //var outboxMessagesInterceptor = serviceProvider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            var outboxMessagesInterceptor = serviceProvider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
             //var auditingInterceptor = serviceProvider.GetService<AuditingInterceptor>();
 
             dbContextOptionsBuilder
@@ -46,30 +46,30 @@ public class InfrastructureServiceInstaller : IServiceInstaller
                         sqlServerAction.CommandTimeout(databaseOptions.CommandTimeout);
 
                         sqlServerAction.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                    });
-                //.AddInterceptors(outboxMessagesInterceptor);
+                    })
+                .AddInterceptors(outboxMessagesInterceptor);
 
             dbContextOptionsBuilder.EnableDetailedErrors(databaseOptions.EnabledDetailedErrors);
 
             dbContextOptionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnabledSensitiveDataLogging);
         });
 
-        //services.AddQuartz(configure =>
-        //{
-        //    var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
+        services.AddQuartz(configure =>
+        {
+            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
 
-        //    configure
-        //        .AddJob<ProcessOutboxMessagesJob>(jobKey)
-        //        .AddTrigger(trigger =>
-        //            trigger.ForJob(jobKey)
-        //                    .WithSimpleSchedule(schedule =>
-        //                        schedule.WithIntervalInSeconds(10).RepeatForever()
-        //                    )
-        //        );
+            configure
+                .AddJob<ProcessOutboxMessagesJob>(jobKey)
+                .AddTrigger(trigger =>
+                    trigger.ForJob(jobKey)
+                            .WithSimpleSchedule(schedule =>
+                                schedule.WithIntervalInSeconds(60).RepeatForever()
+                            )
+                );
 
-        //    configure.UseMicrosoftDependencyInjectionJobFactory();
-        //});
+            configure.UseMicrosoftDependencyInjectionJobFactory();
+        });
 
-        //services.AddQuartzHostedService();
+        services.AddQuartzHostedService();
     }
 }

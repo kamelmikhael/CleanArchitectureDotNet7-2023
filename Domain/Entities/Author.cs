@@ -1,4 +1,6 @@
 ﻿using Domain.Common;
+using Domain.DomainEvents.Authors;
+using Domain.Errors;
 using Domain.Extensions;
 using Domain.Shared;
 using System;
@@ -16,9 +18,8 @@ public sealed class Author : FullAuditedEntity
 
     protected Author() { }
 
-    private Author(int id, string name, DateTime? dateOfBirth)
+    private Author(string name, DateTime? dateOfBirth)
     {
-        Id = id;
         Name = name;
         DateOfBirth = dateOfBirth;
     }
@@ -44,11 +45,12 @@ public sealed class Author : FullAuditedEntity
     }
 
     public static AppResult<Author> Create(
-        int id,
         string name,
         DateTime? dateOfBirth)
     {
-        var author = new Author(id, name, dateOfBirth);
+        var author = new Author(name, dateOfBirth);
+
+        //author.RaiseDomainEvent(new AuthorCreatedDomainEvent(Guid.NewGuid(), author.Id));
 
         return author;
     }

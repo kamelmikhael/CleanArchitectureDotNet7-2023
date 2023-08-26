@@ -8,15 +8,15 @@ public static class DomainErrors
     {
         public static AppError NotFound(string entityName, object id) => new(
             $"{entityName}.NotFound",
-            $"{entityName} with [{id}] not found.");
+            $"{entityName} with Id = [{id}] was not found.");
 
         public static AppError NotFound(object id) => new(
             "Record.NotFound",
-            $"Record with [{id}] not found.");
+            $"Record with Id = [{id}] was not found.");
 
         public static AppError NotFound() => new(
             "Resource.NotFound",
-            $"Resource is not found or you have no permission to access.");
+            $"Resource was not found or you have no permission to access.");
     }
 
     public static class Book
@@ -35,5 +35,12 @@ public static class DomainErrors
         public static readonly AppError MaxLength = new AppError(
                 $"{nameof(BookTitle)}.MaxLength",
                 $"{nameof(BookTitle)} must be less than or equal {MaxLength}");
+    }
+
+    public static class Author
+    {
+        public static readonly AppError NameAlreadyExist = new AppError(
+                $"{nameof(Author)}.NameAlreadyExist",
+                $"{nameof(Author)} name is already exist");
     }
 }

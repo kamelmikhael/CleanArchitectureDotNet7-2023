@@ -36,7 +36,7 @@ public abstract class Entity : Entity<int>, IEquatable<Entity>
         => Id.GetHashCode() * 41;
 }
 
-public abstract class Entity<TPrimaryKey> : IBaseEntity<TPrimaryKey>, IAggregateRoot
+public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>, IAggregateRoot
 {
     /// <summary>
     /// Unique identifier for this entity.
@@ -49,8 +49,5 @@ public abstract class Entity<TPrimaryKey> : IBaseEntity<TPrimaryKey>, IAggregate
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 
-    protected void RaiseDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
+    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

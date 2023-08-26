@@ -57,8 +57,8 @@ public class ProcessOutboxMessagesJob : IJob
 
             outboxMessage.Error = result.FinalException?.ToString();
             outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
-
-            await _dbContext.SaveChangesAsync(context.CancellationToken);
         }
+
+        await _dbContext.SaveChangesAsync(context.CancellationToken);
     }
 }

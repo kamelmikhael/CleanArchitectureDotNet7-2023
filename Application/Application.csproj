@@ -29,4 +29,11 @@
 		</AssemblyAttribute>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\AuthorFeatures\Dtos\" />
+      <Folder Include="Features\AuthorFeatures\Mapping\" />
+      <Folder Include="Features\AuthorFeatures\Validators\" />
+      <Folder Include="Features\AuthorFeatures\Queries\" />
+    </ItemGroup>
+
 </Project>
