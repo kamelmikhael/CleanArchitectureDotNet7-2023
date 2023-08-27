@@ -17,14 +17,13 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(nameof(GetListWithPagination))]
-    //[ProducesResponseType(typeof(AppResult<PagedResponseDto<BookDto>>), StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<AppResult<PagedResponseDto<BookDto>>> GetListWithPagination(
+    [ProducesResponseType(typeof(AppResult<PagedResponseDto<BookDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetListWithPagination(
         [FromQuery] BookPagedRequestDto input, 
         CancellationToken cancellationToken)
-        => await Sender.Send(
+        => Ok(await Sender.Send(
             new BookGetAllWithPaginationQuery(input), cancellationToken
-        );
+        ));
 
     /// <summary>
     /// Get By Id
@@ -75,12 +74,18 @@ public class BooksController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut(nameof(Update))]
-    public async Task<AppResult> Update(
+    [ProducesResponseType(typeof(AppResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
         BookUpdateCommand input
         , CancellationToken cancellationToken)
-        => await Sender.Send(
-            input, cancellationToken
-        );
+    {
+        //TODO: Handle validations errors
+
+        var response = await Sender.Send(input, cancellationToken);
+
+        return response.IsSuccess ? Ok(response) : NotFound(response.Error);
+    }
 
     /// <summary>
     /// Delete record

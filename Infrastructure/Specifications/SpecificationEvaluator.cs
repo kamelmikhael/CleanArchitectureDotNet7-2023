@@ -40,11 +40,11 @@ internal static class SpecificationEvaluator
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
         }
 
-        if(specification.IsPagedResult)
+        if(specification.PageIndex.HasValue && specification.PageSize.HasValue)
         {
             queryable = queryable
-                .Skip(specification.PageIndex * specification.PageSize)
-                .Take(specification.PageSize);
+                .Skip(specification.PageIndex.Value * specification.PageSize.Value)
+                .Take(specification.PageSize.Value);
         }
 
         return queryable;

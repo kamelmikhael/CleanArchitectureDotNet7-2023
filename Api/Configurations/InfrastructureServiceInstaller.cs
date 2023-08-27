@@ -26,7 +26,7 @@ public class InfrastructureServiceInstaller : IServiceInstaller
 
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
-        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        //services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         //services.AddSingleton<AuditingInterceptor>();
 
         services.ConfigureOptions<DatabaseOptionsSetup>();
@@ -34,20 +34,21 @@ public class InfrastructureServiceInstaller : IServiceInstaller
         services.AddDbContext<ApplicationDbContext>((serviceProvider, dbContextOptionsBuilder) =>
         {
             var databaseOptions = serviceProvider.GetService<IOptions<DatabaseOptions>>()!.Value;
-            var outboxMessagesInterceptor = serviceProvider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            //var outboxMessagesInterceptor = serviceProvider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
             //var auditingInterceptor = serviceProvider.GetService<AuditingInterceptor>();
 
             dbContextOptionsBuilder
                 .UseSqlServer(
                     databaseOptions.ConnectionString,
-                    sqlServerAction => {
+                    sqlServerAction =>
+                    {
                         sqlServerAction.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
 
                         sqlServerAction.CommandTimeout(databaseOptions.CommandTimeout);
 
                         sqlServerAction.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                    })
-                .AddInterceptors(outboxMessagesInterceptor);
+                    });
+                //.AddInterceptors(outboxMessagesInterceptor);
 
             dbContextOptionsBuilder.EnableDetailedErrors(databaseOptions.EnabledDetailedErrors);
 

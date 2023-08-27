@@ -19,17 +19,20 @@ public class BaseApiController : ControllerBase
         result switch
         {
             { IsSuccess: true } => throw new InvalidOperationException(),
-            IAppValidationResult validationResult => BadRequest(
-                CreateProblemDetails(
-                    "Validation Error",
-                    StatusCodes.Status400BadRequest,
-                    result.Error,
-                    validationResult.Errors)),
-            _ => BadRequest(
-                CreateProblemDetails(
-                    "Bad Request",
-                    StatusCodes.Status400BadRequest,
-                    result.Error))
+            IAppValidationResult validationResult => 
+                BadRequest(
+                    CreateProblemDetails(
+                        "Validation Error",
+                        StatusCodes.Status400BadRequest,
+                        result.Error,
+                        validationResult.Errors)),
+            //{ Error: AppError } => NotFound(result.Error),
+            _ => 
+                BadRequest(
+                    CreateProblemDetails(
+                        "Bad Request",
+                        StatusCodes.Status400BadRequest,
+                        result.Error))
         };
 
     private static ProblemDetails CreateProblemDetails(

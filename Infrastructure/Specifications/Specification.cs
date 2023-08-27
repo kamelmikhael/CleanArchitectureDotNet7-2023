@@ -25,12 +25,11 @@ public abstract class Specification<TEntity, TKey>
 
     public Expression<Func<TEntity, object>>? OrderByDescendingExpression { get; private set; }
 
-    public bool IsSplitQuery { get; private set; }
-    public bool IsNoTracking { get; private set; }
+    public bool IsSplitQuery { get; protected set; }
+    public bool IsNoTracking { get; protected set; }
 
-    public bool IsPagedResult { get; private set; }
-    public int PageIndex { get; private set; } = 0;
-    public int PageSize { get; private set; } = 10;
+    public int? PageIndex { get; protected set; }
+    public int? PageSize { get; protected set; }
 
     protected void AddInclude(Expression<Func<TEntity, object>> includeExpression) 
         => IncludeExpressions.Add(includeExpression);
@@ -40,13 +39,4 @@ public abstract class Specification<TEntity, TKey>
 
     protected void AddOrderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
         => OrderByDescendingExpression = orderByDescendingExpression;
-
-    protected void WithPaging(int pageIndex, int pageSize)
-        => (IsPagedResult, PageIndex, PageSize) = (true, pageIndex, pageSize);
-
-    protected void AsNoTracking() 
-        => IsNoTracking = true;
-
-    protected void AsSplitQuery() 
-        => IsSplitQuery = true;
 }

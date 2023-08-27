@@ -141,7 +141,7 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     private void SetCreationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        var creationAuditedEntries = _context.ChangeTracker
+        _ = _context.ChangeTracker
             .Entries<ICreationAudited>()
             .Where(e => e.State == EntityState.Added)
             .Select(entry =>
@@ -156,7 +156,7 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     private void SetModificationAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        var modificationAuditedEntries = _context.ChangeTracker
+        _ = _context.ChangeTracker
             .Entries<IModificationAudited>()
             .Where(e => e.State == EntityState.Modified)
             .Select(entry =>
@@ -171,7 +171,7 @@ internal sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     private void SetDeletionAuditedEntities(DateTime utcNow, Guid? currentLoggedUserId)
     {
-        var deletionAuditedEntries = _context.ChangeTracker
+        _ = _context.ChangeTracker
             .Entries<IDeletionAudited>()
             .Where(e => e.State == EntityState.Deleted)
             .Select(entry =>

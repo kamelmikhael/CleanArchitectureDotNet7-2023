@@ -10,6 +10,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse>
     where TResponse : AppResult
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
+
     public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
         => _validators = validators;
 
@@ -39,6 +40,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse>
 
         if(errors.Any())
         {
+            // Return Validation result 
             return CreateValidationResult<TResponse>(errors);
         }
 

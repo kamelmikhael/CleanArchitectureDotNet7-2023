@@ -10,6 +10,7 @@ public class BookGetAllWithPaginationSpecification : Specification<Book, Guid>
         int pageIndex, 
         int pageSize) : base(book => string.IsNullOrEmpty(keyword) || ((string)book.Title).Contains(keyword))
     {
-        WithPaging(pageIndex, pageSize);
+        PageIndex = pageIndex;
+        PageSize = pageSize;
     }
 }
