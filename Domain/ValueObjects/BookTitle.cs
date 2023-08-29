@@ -2,6 +2,7 @@
 using Domain.Errors;
 using Domain.Exceptions;
 using Domain.Shared;
+using System.Text.Json.Serialization;
 
 namespace Domain.ValueObjects;
 
@@ -9,7 +10,7 @@ public sealed class BookTitle : ValueObject
 {
     public const int MaxLength = 50;
 
-    private BookTitle(string value)
+    public BookTitle(string value)
     {
         // Validate(value);
 

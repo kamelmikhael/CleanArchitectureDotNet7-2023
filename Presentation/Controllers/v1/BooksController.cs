@@ -3,11 +3,13 @@ using Application.Features.BookFeatures.Commands;
 using Application.Features.BookFeatures.Dtos;
 using Application.Features.BookFeatures.Queries;
 using Domain.Shared;
+using Infrastructure.Authentications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.v1;
 
+//[HasPermission(Permission.BookAll)]
 public class BooksController : BaseApiController
 {
     /// <summary>

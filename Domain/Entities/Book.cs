@@ -15,7 +15,7 @@ public sealed class Book : FullAuditedEntity<Guid>
     public const int MaxDescriptionLength = 500;
     public const int MaxTypeLength = 50;
 
-    protected Book() { }
+    private Book() { }
 
     private Book(Guid id, BookTitle title, string description, BookType type, DateOnly publishedOn)
     {

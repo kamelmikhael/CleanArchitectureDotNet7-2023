@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects;
+using Infrastructure.Contexts;
 using Infrastructure.Resolvers;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,15 +14,18 @@ public class CachedBookRepository : IBookRepository
     private readonly BookRepository _decorated;
     private readonly IMemoryCache _memoryCache;
     private readonly IDistributedCache _distributedCache;
+    private readonly ApplicationDbContext _dbContext;
 
     public CachedBookRepository(
         BookRepository decorated,
         IMemoryCache memoryCache,
-        IDistributedCache distributedCache)
+        IDistributedCache distributedCache,
+        ApplicationDbContext dbContext)
     {
         _decorated = decorated;
         _memoryCache = memoryCache;
         _distributedCache = distributedCache;
+        _dbContext = dbContext;
     }
 
     public void Add(Book entity)
@@ -50,18 +54,28 @@ public class CachedBookRepository : IBookRepository
     {
         string key = $"book-{id}";
 
-        return await _memoryCache.GetOrCreateAsync(
-            key,
-            async entry =>
-            {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-                return await _decorated.GetByIdAsync(id, cancellationToken);
-            });
+        //return await GetMemoryCachedBookAsync(id, key, cancellationToken);
 
-        // return await GetDistributedCachedBook(id, key, cancellationToken);
+        return await GetDistributedCachedBookAsync(id, key, cancellationToken);
     }
 
-    private async Task<Book?> GetDistributedCachedBook(Guid id, string key, CancellationToken cancellationToken)
+    private async Task<Book?> GetMemoryCachedBookAsync(Guid id, string key, CancellationToken cancellationToken)
+    {
+        var book = await _memoryCache.GetOrCreateAsync(
+                    key,
+                    async entry =>
+                    {
+                        entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+                        return await _decorated.GetByIdAsync(id, cancellationToken);
+                    });
+
+        // to be tracked for update
+        if (book is not null) _dbContext.Set<Book>().Attach(book);
+
+        return book;
+    }
+
+    private async Task<Book?> GetDistributedCachedBookAsync(Guid id, string key, CancellationToken cancellationToken)
     {
         string? cahchedBook = await _distributedCache.GetStringAsync(key, cancellationToken);
 
@@ -89,6 +103,9 @@ public class CachedBookRepository : IBookRepository
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 ContractResolver = new PrivateResolver(),
             });
+
+        // to be tracked for update
+        if(book is not null) _dbContext.Set<Book>().Attach(book);
 
         return book;
     }

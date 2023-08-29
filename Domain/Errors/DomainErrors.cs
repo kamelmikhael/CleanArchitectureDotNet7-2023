@@ -43,4 +43,11 @@ public static class DomainErrors
                 $"{nameof(Author)}.NameAlreadyExist",
                 $"{nameof(Author)} name is already exist");
     }
+
+    public static class Account
+    {
+        public static readonly AppError InvalidCredentials = new AppError(
+                $"{nameof(Account)}.InvalidCredentials",
+                $"Please enter your correct email/password");
+    }
 }

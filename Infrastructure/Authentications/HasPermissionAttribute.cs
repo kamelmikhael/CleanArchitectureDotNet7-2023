@@ -7,6 +7,6 @@ namespace Infrastructure.Authentications;
 //    public HasPermissionAttribute(Permission permission)
 //        : base(policy: permission.ToString())
 //    {
-        
+
 //    }
 //}

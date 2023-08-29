@@ -55,22 +55,22 @@ public class InfrastructureServiceInstaller : IServiceInstaller
             dbContextOptionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnabledSensitiveDataLogging);
         });
 
-        services.AddQuartz(configure =>
-        {
-            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
+        //services.AddQuartz(configure =>
+        //{
+        //    var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
 
-            configure
-                .AddJob<ProcessOutboxMessagesJob>(jobKey)
-                .AddTrigger(trigger =>
-                    trigger.ForJob(jobKey)
-                            .WithSimpleSchedule(schedule =>
-                                schedule.WithIntervalInSeconds(60).RepeatForever()
-                            )
-                );
+        //    configure
+        //        .AddJob<ProcessOutboxMessagesJob>(jobKey)
+        //        .AddTrigger(trigger =>
+        //            trigger.ForJob(jobKey)
+        //                    .WithSimpleSchedule(schedule =>
+        //                        schedule.WithIntervalInSeconds(60).RepeatForever()
+        //                    )
+        //        );
 
-            configure.UseMicrosoftDependencyInjectionJobFactory();
-        });
+        //    configure.UseMicrosoftDependencyInjectionJobFactory();
+        //});
 
-        services.AddQuartzHostedService();
+        //services.AddQuartzHostedService();
     }
 }
