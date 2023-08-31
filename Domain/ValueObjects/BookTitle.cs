@@ -9,6 +9,7 @@ namespace Domain.ValueObjects;
 public sealed class BookTitle : ValueObject
 {
     public const int MaxLength = 50;
+    public const int MinLength = 2;
 
     public BookTitle(string value)
     {
@@ -28,15 +29,30 @@ public sealed class BookTitle : ValueObject
 
     public static AppResult<BookTitle> Create(string value)
     {
-        #region Validation
-        if (string.IsNullOrWhiteSpace(value))
-            return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.Empty);
+        return AppResult<string>.Create(value)
+            .Ensure(
+                e => !string.IsNullOrWhiteSpace(e),
+                DomainErrors.BookTitle.Empty)
+            .Ensure(
+                e => e.Length <= MaxLength,
+                DomainErrors.BookTitle.MaxLength)
+            .Ensure(
+                e => e.Length >= MinLength,
+                DomainErrors.BookTitle.MinLength)
+            .Map(e => new BookTitle(e));
 
-        if (value.Length > MaxLength)
-            return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.MaxLength);
+        #region Validation
+        //if (string.IsNullOrWhiteSpace(value))
+        //    return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.Empty);
+
+        //if (value.Length > MaxLength)
+        //    return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.MaxLength);
+
+        //if (value.Length < MinLength)
+        //    return AppResult.Failure<BookTitle>(DomainErrors.BookTitle.MaxLength);
         #endregion
 
-        return new BookTitle(value);
+        //return new BookTitle(value);
     }
 
     private static void Validate(string value)
