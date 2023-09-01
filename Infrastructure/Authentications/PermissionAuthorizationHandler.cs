@@ -14,24 +14,33 @@
 //        _serviceScopeFactory = serviceScopeFactory;
 //    }
 
-//    protected override async Task HandleRequirementAsync(
+//    protected override Task HandleRequirementAsync(
 //        AuthorizationHandlerContext context,
 //        PermissionRequirement requirement)
 //    {
-//        var userId = context.User.Claims.FirstOrDefault(
-//            x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
+//        //var userId = context.User.Claims.FirstOrDefault(
+//        //    x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-//        if (!long.TryParse(userId, out long parsetUserId)) { return; }
+//        //if (!long.TryParse(userId, out long parsetUserId)) { return; }
 
-//        using IServiceScope scope = _serviceScopeFactory.CreateScope();
+//        //using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
-//        IPermissionService permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
-
-//        var permissions = await permissionService.GetPermissionsAsync(parsetUserId);
+//        //Approach 1 to get permissions from DB
+//        //IPermissionService permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+//        //var permissions = await permissionService.GetPermissionsAsync(parsetUserId);
+        
+//        //Approach 2 to get permissions from Claims
+//        var permissions = context.User
+//            .Claims
+//            .Where(x => x.Type == CustomClaimNames.Permissions)
+//            .Select(x => x.Value)
+//            .ToHashSet();
 
 //        if (permissions.Contains(requirement.Permission))
 //        {
 //            context.Succeed(requirement);
 //        }
+
+//        return Task.CompletedTask;
 //    }
 //}

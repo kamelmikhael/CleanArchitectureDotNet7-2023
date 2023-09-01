@@ -1,6 +1,6 @@
-﻿//namespace Infrastructure.Authentications;
+﻿namespace Infrastructure.Authentications;
 
-//public interface IPermissionService
-//{
-//    Task<HashSet<string>> GetPermissionsAsync(long userId);
-//}
+public interface IPermissionService
+{
+    Task<HashSet<string>> GetPermissionsAsync(long userId);
+}

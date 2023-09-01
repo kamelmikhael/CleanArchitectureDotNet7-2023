@@ -20,9 +20,9 @@ public class AuthenticationAndAuthorizationServiceInstaller : IServiceInstaller
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
-        //services.AddAuthorization();
+        services.AddAuthorization();
         //services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         //services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-        //services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IPermissionService, PermissionService>();
     }
 }

@@ -32,6 +32,6 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
         }
 
         // Generate JWT
-        return AppResult.Success<string>(_jwtProvider.Generate(user));
+        return AppResult.Success<string>(await _jwtProvider.Generate(user));
     }
 }
