@@ -6,4 +6,11 @@ public sealed class User : Entity<long>
 {
     public string Name { get; set; }
     public string Email { get; set; }
+
+    public static readonly User Admin = new User
+    {
+        Id = 1,
+        Name = "admin",
+        Email = "admin@test.com",
+    };
 }

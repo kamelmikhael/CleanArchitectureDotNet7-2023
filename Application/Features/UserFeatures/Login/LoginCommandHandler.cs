@@ -2,6 +2,7 @@
 using Application.Abstractions.Messaging;
 using Domain.Entities;
 using Domain.Errors;
+using Domain.Repositories;
 using Domain.Shared;
 
 namespace Application.Features.UserFeatures.Login;
@@ -9,10 +10,13 @@ namespace Application.Features.UserFeatures.Login;
 internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string>
 {
     private readonly IJwtProvider _jwtProvider;
+    private readonly IRepository<User, long> _userRepository;
 
-    public LoginCommandHandler(IJwtProvider jwtProvider)
+    public LoginCommandHandler(IJwtProvider jwtProvider,
+        IRepository<User, long> userRepository)
     {
         _jwtProvider = jwtProvider;
+        _userRepository = userRepository;
     }
 
     public async Task<AppResult<string>> Handle(
@@ -20,7 +24,7 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, string
         CancellationToken cancellationToken)
     {
         //Get User info
-        var user = new User() { Id = 1, Name = "Kamel Danial", Email = request.Email };
+        var user = await _userRepository.FirstOrDefaultAsync(x => x.Email == request.Email);
 
         if(user is null)
         {

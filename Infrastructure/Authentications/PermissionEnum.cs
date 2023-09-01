@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Authentications;
 
-public enum Permission
+public enum PermissionEnum
 {
     BookAll = 1,
     BookList,
