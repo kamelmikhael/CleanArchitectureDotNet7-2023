@@ -15,13 +15,13 @@
 //    }
 
 //    protected override async Task HandleRequirementAsync(
-//        AuthorizationHandlerContext context, 
+//        AuthorizationHandlerContext context,
 //        PermissionRequirement requirement)
 //    {
 //        var userId = context.User.Claims.FirstOrDefault(
 //            x => x.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-//        if (!Guid.TryParse(userId, out Guid parsetUserId)) { return; }
+//        if (!long.TryParse(userId, out long parsetUserId)) { return; }
 
 //        using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
@@ -29,11 +29,9 @@
 
 //        var permissions = await permissionService.GetPermissionsAsync(parsetUserId);
 
-//        if(permissions.Contains(requirement.Permission))
+//        if (permissions.Contains(requirement.Permission))
 //        {
 //            context.Succeed(requirement);
 //        }
-
-
 //    }
 //}

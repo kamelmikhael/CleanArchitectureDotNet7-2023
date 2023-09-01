@@ -1,5 +1,7 @@
 ﻿using Api.OptionsSetup;
+using Infrastructure.Authentications;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Configurations;
 
@@ -18,7 +20,9 @@ public class AuthenticationAndAuthorizationServiceInstaller : IServiceInstaller
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
-        services.AddAuthorization();
+        //services.AddAuthorization();
         //services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        //services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+        //services.AddScoped<IPermissionService, PermissionService>();
     }
 }

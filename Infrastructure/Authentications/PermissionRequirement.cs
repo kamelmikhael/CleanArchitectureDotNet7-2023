@@ -9,5 +9,5 @@
 //        Permission = permission;
 //    }
 
-//    public string Permission { get; set; }
+//    public string Permission { get; }
 //}

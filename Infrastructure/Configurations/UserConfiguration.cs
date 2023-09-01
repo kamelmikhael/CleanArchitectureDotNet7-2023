@@ -18,6 +18,10 @@ public partial class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(256);
 
+        entity.HasMany(x => x.Roles)
+            .WithMany()
+            .UsingEntity<UserRole>();
+
         entity.HasData(User.Admin);
 
         OnConfigurePartial(entity);
