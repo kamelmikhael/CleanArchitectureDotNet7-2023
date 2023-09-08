@@ -18,6 +18,7 @@ public class ApplicationServiceInstaller : IServiceInstaller
 
         #region Add Fluent Validation
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
         services.AddValidatorsFromAssembly(Application.AssemblyReference.Assembly,
             includeInternalTypes: true);
         #endregion
