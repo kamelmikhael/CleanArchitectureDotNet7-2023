@@ -4,17 +4,17 @@ namespace Domain.Extensions;
 
 public static class AppResultExtensions
 {
-    public static AppResult<T> Ensure<T>(
-        this AppResult<T> result,
-        Func<T, bool> predicate,
-        AppError error)
-    {
-        if(result.IsFailure) return result;
+    //public static AppResult<T> Ensure<T>(
+    //    this AppResult<T> result,
+    //    Func<T, bool> predicate,
+    //    AppError error)
+    //{
+    //    if(result.IsFailure) return result;
 
-        return predicate(result.Value)
-            ? result
-            : AppResult.Failure<T>(error);
-    }
+    //    return predicate(result.Value)
+    //        ? result
+    //        : AppResult.Failure<T>(error);
+    //}
 
     public static AppResult<TOut> Map<TIn, TOut>(
         this AppResult<TIn> result,
@@ -22,6 +22,6 @@ public static class AppResultExtensions
     {
         return result.IsSuccess
             ? AppResult.Success(mappingFunc(result.Value))
-            : AppResult.Failure<TOut>(result.Error);
+            : AppResult.Failure<TOut>(result.Errors);
     }
 }

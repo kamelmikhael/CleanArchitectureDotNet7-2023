@@ -39,7 +39,7 @@ internal sealed class AuthorCreateCommandHandler : ICommandHandler<AuthorCreateC
             request.Name,
             request.DateOfBirth);
 
-        if (authorResult.IsFailure) return AppResult.Failure<int>(authorResult.Error);
+        if (authorResult.IsFailure) return AppResult.Failure<int>(authorResult.Errors);
 
         _authorRepository.Add(authorResult.Value);
 

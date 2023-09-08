@@ -34,11 +34,11 @@ public static class DomainErrors
 
         public static readonly AppError MaxLength = new AppError(
                 $"{nameof(BookTitle)}.MaxLength",
-                $"{nameof(BookTitle)} must be less than or equal {MaxLength}");
+                $"{nameof(BookTitle)} must be less than or equal {ValueObjects.BookTitle.MaxLength}");
 
         public static readonly AppError MinLength = new AppError(
                 $"{nameof(BookTitle)}.MinLength",
-                $"{nameof(BookTitle)} must be greater than or equal {MinLength}");
+                $"{nameof(BookTitle)} must be greater than or equal {ValueObjects.BookTitle.MinLength}");
     }
 
     public static class Author

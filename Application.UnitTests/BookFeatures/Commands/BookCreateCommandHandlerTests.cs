@@ -53,7 +53,7 @@ public class BookCreateCommandHandlerTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(DomainErrors.Book.TitleAlreadyInUse);
+        result.Errors[0].Should().Be(DomainErrors.Book.TitleAlreadyInUse);
     }
 
     [Fact]

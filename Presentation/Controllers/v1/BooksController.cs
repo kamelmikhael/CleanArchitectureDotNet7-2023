@@ -44,7 +44,7 @@ public class BooksController : BaseApiController
             new BookGetByIdQuery(id), cancellationToken
         );
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class BooksController : BaseApiController
 
         var response = await Sender.Send(input, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response) : NotFound(response.Errors);
     }
 
     /// <summary>

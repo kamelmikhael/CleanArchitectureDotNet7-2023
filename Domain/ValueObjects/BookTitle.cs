@@ -1,8 +1,8 @@
 ﻿using Domain.Common;
 using Domain.Errors;
 using Domain.Exceptions;
+using Domain.Extensions;
 using Domain.Shared;
-using System.Text.Json.Serialization;
 
 namespace Domain.ValueObjects;
 
@@ -29,16 +29,11 @@ public sealed class BookTitle : ValueObject
 
     public static AppResult<BookTitle> Create(string value)
     {
-        return AppResult<string>.Create(value)
-            .Ensure(
-                e => !string.IsNullOrWhiteSpace(e),
-                DomainErrors.BookTitle.Empty)
-            .Ensure(
-                e => e.Length <= MaxLength,
-                DomainErrors.BookTitle.MaxLength)
-            .Ensure(
-                e => e.Length >= MinLength,
-                DomainErrors.BookTitle.MinLength)
+        return AppResult.Ensure(
+            value,
+            (e => !string.IsNullOrWhiteSpace(e), DomainErrors.BookTitle.Empty),
+            (e => e.Length <= MaxLength, DomainErrors.BookTitle.MaxLength),
+            (e => e.Length >= MinLength, DomainErrors.BookTitle.MinLength))
             .Map(e => new BookTitle(e));
 
         #region Validation

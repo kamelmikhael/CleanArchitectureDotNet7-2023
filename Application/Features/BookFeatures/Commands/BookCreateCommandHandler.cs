@@ -38,7 +38,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
         if (titleResult.IsFailure)
         {
             // Log Error
-            return AppResult.Failure<Guid>(titleResult.Error);
+            return AppResult.Failure<Guid>(titleResult.Errors);
         }
 
         var isTitleUnique = await _repository.IsBookTitleUniqueAsync(titleResult.Value, cancellationToken);
@@ -53,7 +53,7 @@ internal sealed class BookCreateCommandHandler : ICommandHandler<BookCreateComma
 
         if(bookCreateResult.IsFailure)
         {
-            return AppResult.Failure<Guid>(bookCreateResult.Error);
+            return AppResult.Failure<Guid>(bookCreateResult.Errors);
         }
 
         bookCreateResult.Value.AuthorId = 1;

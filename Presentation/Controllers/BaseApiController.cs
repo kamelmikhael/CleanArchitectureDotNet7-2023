@@ -24,7 +24,6 @@ public class BaseApiController : ControllerBase
                     CreateProblemDetails(
                         "Validation Error",
                         StatusCodes.Status400BadRequest,
-                        result.Error,
                         validationResult.Errors)),
             //{ Error: AppError } => NotFound(result.Error),
             _ => 
@@ -32,19 +31,18 @@ public class BaseApiController : ControllerBase
                     CreateProblemDetails(
                         "Bad Request",
                         StatusCodes.Status400BadRequest,
-                        result.Error))
+                        result.Errors))
         };
 
     private static ProblemDetails CreateProblemDetails(
         string title,
         int status,
-        AppError error,
         AppError[]? errors = null)
         => new()
         {
             Title = title,
-            Type = error.Code,
-            Detail = error.Message,
+            //Type = error.Code,
+            //Detail = error.Message,
             Status = status,
             Extensions = { { nameof(errors), errors } }
         };
