@@ -2,41 +2,10 @@
 
 namespace Domain.Common;
 
-public abstract class Entity : Entity<int>, IEquatable<Entity>
-{
-    public static bool operator ==(Entity? first, Entity? second)
-        => first is not null && second is not null && first.Equals(second);
+public abstract class Entity : Entity<int>
+{ }
 
-    public static bool operator !=(Entity? first, Entity? second)
-        => !(first == second);
-
-    public bool Equals(Entity? other)
-    {
-        if (other is null)
-            return false;
-
-        if (other.GetType() != GetType())
-            return false;
-
-        return other.Id == Id;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-
-        if (obj.GetType() != GetType()) return false;
-
-        if (obj is not Entity entity) return false;
-
-        return entity.Id == Id;
-    }
-
-    public override int GetHashCode()
-        => Id.GetHashCode() * 41;
-}
-
-public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>, IAggregateRoot
+public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>, IAggregateRoot, IEquatable<Entity<TPrimaryKey>>
 {
     /// <summary>
     /// Unique identifier for this entity.
@@ -50,4 +19,25 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>, IAggregateRoot
     public void ClearDomainEvents() => _domainEvents.Clear();
 
     protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+
+    public static bool operator ==(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) => first.Equals(second);
+
+    public static bool operator !=(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) => !first.Equals(second);
+
+    public bool Equals(Entity<TPrimaryKey>? other)
+    {
+        if (other is null || other.GetType() != GetType()) return false;
+
+        return EqualityComparer<TPrimaryKey>.Default.Equals(Id, other.Id);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Entity<TPrimaryKey>);
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode() * 41;
+    }
 }
