@@ -126,7 +126,7 @@ public class ArchitectureTests
     }
     
     [Fact]
-    public void Controllers_Should_Not_HaveDependencyOnMediatR()
+    public void Controllers_Should_HaveDependencyOnMediatR()
     {
         // Arrange
         var assembly = typeof(Presentation.AssemblyReference).Assembly;
